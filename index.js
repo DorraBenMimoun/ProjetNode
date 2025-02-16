@@ -40,6 +40,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
 app.use("/users/", require("./routes/userRoute"));
+app.use("/tasks/",require("./routes/taskRoute"));
+
+app.get("/", (req, res) => {
+  res.send("Bienvenue sur l'API de gestion des tâches !");
+});
 
 server.listen(port, () => {
   console.log(`http://localhost:${port}`);
