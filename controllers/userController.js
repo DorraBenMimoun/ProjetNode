@@ -13,8 +13,9 @@ const generateToken = (user) => {
 };
 
 // Register a new user
-const registerUser = async (req, res) => {
+exports.registerUser = async (req, res) => {
   try {
+    console.log('req body',req.body)
     const { email, password, username } = req.body;
 
     if (!email || !password || !username) {
@@ -53,7 +54,7 @@ const registerUser = async (req, res) => {
 };
 
 // Login user
-const loginUser = async (req, res) => {
+exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -88,7 +89,7 @@ const loginUser = async (req, res) => {
 };
 
 // Get user profile (Protected)
-const getProfile = async (req, res) => {
+exports.getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
     if (!user) {
@@ -100,4 +101,55 @@ const getProfile = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getProfile };
+// Update user profile (Protected)
+exports.updateProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.username = req.body.username || user.username;
+    user.email = req.body.email || user.email;
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: {
+        id: user._id,
+        email: user.email,
+        username: user.username,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Update user password (Protected)
+exports.updatePassword = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      req.body.currentPassword,
+      user.password
+    );
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid password" });
+    }
+
+    user.password = await bcrypt.hash(req.body.newPassword, 10);
+
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+

@@ -7,6 +7,8 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocs = require('./config/swaggerConfig')
 
 // Server creation
 const server = http.createServer(app);
@@ -31,12 +33,13 @@ app.use(
 );
 
 app.use(logger("dev"));
+app.use(express.json()); 
 
-app.use("/ping", (req, res) => {
-  res.json({ message: "pong" });
-});
+// Définir les routes de Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use("/api/user/", require("./routes/userRoute"));
+
+app.use("/users/", require("./routes/userRoute"));
 
 server.listen(port, () => {
   console.log(`http://localhost:${port}`);
