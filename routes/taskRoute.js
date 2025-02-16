@@ -7,6 +7,62 @@ const router = express.Router();
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     Task:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: L'ID unique de la tâche
+ *         title:
+ *           type: string
+ *           description: Le titre de la tâche
+ *         description:
+ *           type: string
+ *           description: La description de la tâche
+ *         status:
+ *           type: string
+ *           enum: [à faire, en cours, terminé, annulé]
+ *           default: à faire
+ *           description: Le statut actuel de la tâche
+ *         dateDebut:
+ *           type: string
+ *           format: date-time
+ *           description: La date de début de la tâche
+ *         dateTerminee:
+ *           type: string
+ *           format: date-time
+ *           description: La date à laquelle la tâche a été terminée
+ *         createdBy:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               description: L'ID de l'utilisateur qui a créé la tâche
+ *             name:
+ *               type: string
+ *               description: Le nom de l'utilisateur
+ *             email:
+ *               type: string
+ *               description: L'email de l'utilisateur
+ *         doneBy:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               description: L'ID de l'utilisateur qui a terminé la tâche
+ *             name:
+ *               type: string
+ *               description: Le nom de l'utilisateur
+ *             email:
+ *               type: string
+ *               description: L'email de l'utilisateur
+ *    
+ */
+
+/**
+ * @swagger
  * /tasks:
  *   get:
  *     summary: Récupérer toutes les tâches de l'utilisateur
@@ -16,6 +72,12 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Liste des tâches
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
  */
 router.get("/", authMiddleware, taskController.getAllTasksUser);
 
@@ -32,19 +94,41 @@ router.get("/", authMiddleware, taskController.getAllTasksUser);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *                 example: "Nouvelle tâche"
- *               description:
- *                 type: string
- *                 example: "Description de la tâche"
+ *             $ref: '#/components/schemas/Task'
  *     responses:
  *       201:
  *         description: Tâche créée
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
  */
 router.post("/", authMiddleware, taskController.createTask);
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   get:
+ *     summary: Récupérer les détails d'une tâche par ID
+ *     tags: [Tâches]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de la tâche à récupérer
+ *     responses:
+ *       200:
+ *         description: Détails de la tâche avec les informations de l'utilisateur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
+ */
+router.get("/:id", authMiddleware, taskController.getTaskById);
 
 /**
  * @swagger
@@ -66,15 +150,14 @@ router.post("/", authMiddleware, taskController.createTask);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               status:
- *                 type: string
- *                 enum: ["en cours", "terminé", "annulé"]
- *                 example: "terminé"
+ *             $ref: '#/components/schemas/Task'
  *     responses:
  *       200:
  *         description: Tâche mise à jour
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
  */
 router.put("/:id", authMiddleware, taskController.updateTask);
 
@@ -96,8 +179,12 @@ router.put("/:id", authMiddleware, taskController.updateTask);
  *     responses:
  *       200:
  *         description: Tâche mise à jour à "en cours"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
  */
-router.put("/:id/inPprogress", authMiddleware, taskController.setInProgress);
+router.put("/:id/inProgress", authMiddleware, taskController.setInProgress);
 
 /**
  * @swagger
@@ -117,6 +204,10 @@ router.put("/:id/inPprogress", authMiddleware, taskController.setInProgress);
  *     responses:
  *       200:
  *         description: Tâche mise à jour à "terminé"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
  */
 router.put("/:id/completed", authMiddleware, taskController.setCompleted);
 
@@ -138,6 +229,10 @@ router.put("/:id/completed", authMiddleware, taskController.setCompleted);
  *     responses:
  *       200:
  *         description: Tâche mise à jour à "annulé"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
  */
 router.put("/:id/cancelled", authMiddleware, taskController.setCancelled);
 

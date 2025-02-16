@@ -39,7 +39,10 @@ exports.createTask = async (req, res) => {
 // Get a single task by ID
 exports.getTaskById = async (req, res) => {
   try {
-    const task = await Task.findOne({ _id: req.params.id, createdBy: req.user._id });
+    const task = await Task.findOne({ _id: req.params.id, createdBy: req.user._id })   
+    .populate("createdBy", "name email")  // Récupère les champs 'name' et 'email' de l'utilisateur
+    .populate("doneBy", "name email")    // Récupère les champs 'name' et 'email' de l'utilisateur qui a terminé la tâche
+    .exec();
 
     if (!task) {
       return res.status(404).json({ message: "Task not found" });

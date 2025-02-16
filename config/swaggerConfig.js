@@ -14,6 +14,20 @@ const options = {
         url: "http://localhost:9091",
       },
     ],
+    components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: "http",
+            scheme: "bearer",
+            bearerFormat: "JWT",
+          },
+        },
+      },
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
   },
   apis: ["./routes/*.js"], // Inclut les fichiers de routes pour générer la doc
 };

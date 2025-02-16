@@ -29,6 +29,9 @@ const router = express.Router();
  *           type: string
  *           format: password
  *           description: Mot de passe sécurisé
+ *         isVerified:
+ *          type: boolean
+ *          description: Statut de vérification de l'utilisateur
  *       example:
  *         username: "john_doe"
  *         email: "john@example.com"
@@ -72,6 +75,32 @@ const router = express.Router();
  */
 router.post("/register", userController.registerUser);
 
+
+/**
+ * @swagger
+ * /users/verify/{token}:
+ *   get:
+ *     summary: Vérifie un utilisateur avec un token
+ *     tags: [Users]
+ *     description: Vérifie l'email de l'utilisateur et active son compte.
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         description: Token de vérification envoyé par email.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Succès - Le compte est activé.
+ *       400:
+ *         description: Token invalide ou expiré.
+ *       500:
+ *         description: Erreur serveur.
+ */
+router.get("/verify/:token", userController.verifyUser);
+
+
 /**
  * @swagger
  * /users/login:
@@ -109,26 +138,45 @@ router.post("/login", userController.loginUser);
 
 /**
  * @swagger
+ * /users:
+ *   get:
+ *     summary: Récupérer tous les utilisateurs
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Liste des utilisateurs récupérée avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get("/", userController.getAllUsers);
+
+/**
+ * @swagger
  * /users/profile:
  *   get:
- *     summary: Obtenir le profil de l'utilisateur connecté
+ *     summary: Récupérer le profil de l'utilisateur connecté
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Informations du profil utilisateur
+ *         description: Profil utilisateur récupéré avec succès
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
  *       401:
- *         description: Utilisateur non authentifié
- *       404:
- *         description: Utilisateur non trouvé
+ *         description: Non autorisé, token manquant ou invalide
  *       500:
  *         description: Erreur serveur
  */
 router.get("/profile", authMiddleware, userController.getProfile);
+
 
 module.exports = router;

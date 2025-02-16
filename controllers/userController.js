@@ -1,7 +1,20 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+
 require("dotenv").config();
+
+// Configuration du transporteur SMTP Mailtrap
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
 
 // Helper function to generate JWT Token
 const generateToken = (user) => {
@@ -15,7 +28,6 @@ const generateToken = (user) => {
 // Register a new user
 exports.registerUser = async (req, res) => {
   try {
-    console.log('req body',req.body)
     const { email, password, username } = req.body;
 
     if (!email || !password || !username) {
@@ -28,14 +40,28 @@ exports.registerUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
     const newUser = new User({
       email,
       password: hashedPassword,
       username,
+      verificationToken, 
+
     });
 
     await newUser.save();
+
+      // Envoyer l'email de vérification
+      const verificationLink = `http://localhost:9901/users/verify/${verificationToken}`;
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Email Verification",
+        text: `Click the following link to verify your account: ${verificationLink}`,
+      };
+  
+      await transporter.sendMail(mailOptions);
 
     const token = generateToken(newUser);
 
@@ -52,7 +78,30 @@ exports.registerUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+// Vérification du token pour activer le compte
+exports.verifyUser = async (req, res) => {
+  try {
+    console.log("hellooo")
+    console.log("token",req.params)
+    const { token } = req.params;
 
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ email: decoded.email });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = null; // Supprimer le token après vérification
+    await user.save();
+
+    res.json({ message: "Account verified successfully. You can now log in." });
+
+  } catch (error) {
+    res.status(500).json({ message: "Invalid or expired token", error: error.message });
+  }
+};
 // Login user
 exports.loginUser = async (req, res) => {
   try {
@@ -87,11 +136,20 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+// Get all users (Protected)
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, "-password"); // Exclure le mot de passe des résultats
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error });
+  }
+};
 
 // Get user profile (Protected)
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password");
+    const user = await User.findById(req.user._id,"-password");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
