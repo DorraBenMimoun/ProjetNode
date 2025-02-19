@@ -26,18 +26,51 @@ const router = express.Router();
  *           format: email
  *           description: Adresse email de l'utilisateur
  *         password:
- *           type: string
- *           format: password
- *           description: Mot de passe sécurisé
+ *          type: string
+ *          format: password
+ *          description: Mot de passe sécurisé
  *         isVerified:
- *          type: boolean
- *          description: Statut de vérification de l'utilisateur
+ *           type: boolean
+ *           description: Statut de vérification de l'utilisateur
  *       example:
  *         username: "john_doe"
  *         email: "john@example.com"
  *         password: "StrongPassword123"
-
- *    
+ *         isVerified: true
+ *
+ *     UserRegister:
+ *       type: object
+ *       properties:
+ *         username:
+ *           type: string
+ *           description: Nom d'utilisateur
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Adresse email de l'utilisateur
+ *         password:
+ *           type: string
+ *           format: password
+ *           description: Mot de passe sécurisé
+ *       example:
+ *         username: "john_doe"
+ *         email: "john@example.com"
+ *         password: "StrongPassword123"
+ *
+ *     UserLogin:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Adresse email de l'utilisateur
+ *         password:
+ *           type: string
+ *           format: password
+ *           description: Mot de passe sécurisé
+ *       example:
+ *         email: "john@example.com"
+ *         password: "StrongPassword123"
  */
 
 /**
@@ -51,23 +84,10 @@ const router = express.Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/UserRegister'
  *     responses:
  *       201:
  *         description: Utilisateur créé avec succès
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Account created successfully."
- *                 user:
- *                   $ref: '#/components/schemas/User'
- *                 token:
- *                   type: string
- *                   description: Jeton JWT de l'utilisateur
  *       400:
  *         description: Données invalides ou utilisateur existant
  *       500:
@@ -75,19 +95,16 @@ const router = express.Router();
  */
 router.post("/register", userController.registerUser);
 
-
 /**
  * @swagger
  * /users/verify/{token}:
  *   get:
  *     summary: Vérifie un utilisateur avec un token
  *     tags: [Users]
- *     description: Vérifie l'email de l'utilisateur et active son compte.
  *     parameters:
  *       - in: path
  *         name: token
  *         required: true
- *         description: Token de vérification envoyé par email.
  *         schema:
  *           type: string
  *     responses:
@@ -100,7 +117,6 @@ router.post("/register", userController.registerUser);
  */
 router.get("/verify/:token", userController.verifyUser);
 
-
 /**
  * @swagger
  * /users/login:
@@ -112,23 +128,10 @@ router.get("/verify/:token", userController.verifyUser);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/UserLogin'
  *     responses:
  *       200:
  *         description: Connexion réussie
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Login successful"
- *                 user:
- *                   $ref: '#/components/schemas/User'
- *                 token:
- *                   type: string
- *                   description: Jeton JWT de l'utilisateur
  *       401:
  *         description: Identifiants invalides
  *       500:
@@ -145,12 +148,6 @@ router.post("/login", userController.loginUser);
  *     responses:
  *       200:
  *         description: Liste des utilisateurs récupérée avec succès
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/User'
  *       500:
  *         description: Erreur serveur
  */
@@ -177,6 +174,5 @@ router.get("/", userController.getAllUsers);
  *         description: Erreur serveur
  */
 router.get("/profile", authMiddleware, userController.getProfile);
-
 
 module.exports = router;
