@@ -58,7 +58,28 @@ const router = express.Router();
  *             email:
  *               type: string
  *               description: L'email de l'utilisateur
- *    
+ *       required:
+ *         - title
+ *         - description
+ *         - status
+ *         - createdBy
+
+ *     CreateTask:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           description: Le titre de la tâche
+ *         description:
+ *           type: string
+ *           description: La description de la tâche
+ *       
+ *       required:
+ *         - title
+ *         - description
+ * 
+
+ * 
  */
 
 /**
@@ -94,7 +115,7 @@ router.get("/", authMiddleware, taskController.getAllTasksUser);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Task'
+ *             $ref: '#/components/schemas/CreateTask'
  *     responses:
  *       201:
  *         description: Tâche créée
@@ -150,7 +171,7 @@ router.get("/:id", authMiddleware, taskController.getTaskById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Task'
+ *             $ref: '#/components/schemas/CreateTask'
  *     responses:
  *       200:
  *         description: Tâche mise à jour
