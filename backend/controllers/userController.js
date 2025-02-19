@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const { v4: uuidv4 } = require('uuid');
 
 require("dotenv").config();
 
@@ -136,6 +137,59 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+exports.forgotPassword = async (req, res) => {
+  try {
+      const { email } = req.body;
+      const user = await User.findOne({ email });
+
+      if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé' });
+
+      // Générer un token sécurisé
+      const resetToken = uuidv4();
+      user.resetToken = resetToken;
+      user.resetTokenExpiration = Date.now() + 3600000; // 1h de validité
+      await user.save();
+
+      // Envoyer l'email avec le lien de réinitialisation
+      const resetLink = `http://localhost:9091/reset-password/${resetToken}`;
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: "Réinitialisation du mot de passe",
+        text: `Cliquez ici pour réinitialiser votre mot de passe: ${resetLink}`,
+      };
+  
+      await transporter.sendMail(mailOptions);
+
+      res.json({ message: 'Email envoyé' });
+  } catch (error) {
+      res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+      const { token } = req.params;
+      const { newPassword } = req.body;
+
+      const user = await User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
+
+      if (!user) return res.status(400).json({ message: 'Token invalide ou expiré' });
+
+      // Hasher le nouveau mot de passe
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      user.password = hashedPassword;
+      user.resetToken = null;
+      user.resetTokenExpiration = null;
+
+      await user.save();
+      res.json({ message: 'Mot de passe réinitialisé avec succès' });
+  } catch (error) {
+      res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
 // Get all users (Protected)
 exports.getAllUsers = async (req, res) => {
   try {
