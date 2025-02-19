@@ -1,4 +1,5 @@
 const Task = require("../models/taskModel");
+const Project = require("../models/projectModel");
 
 // Get all tasks for the authenticated user
 exports.getAllTasksUser = async (req, res) => {
@@ -13,19 +14,27 @@ exports.getAllTasksUser = async (req, res) => {
 // Create a new task
 exports.createTask = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description,projectId } = req.body;
 
     if (!title) {
       return res.status(400).json({ message: "Title is required" });
+    }
+    if (!projectId) {
+      return res.status(400).json({ message: "Project ID is required" });
     }
 
     const newTask = new Task({
       title,
       description,
+      project: projectId,
       createdBy: req.user._id,
     });
 
     await newTask.save();
+
+    //add task to project
+    await Project.findByIdAndUpdate
+    (projectId, { $push: { tasks: newTask._id } });
 
     res.status(201).json({
       message: "Task created successfully.",
@@ -144,5 +153,57 @@ exports.setCompleted = async (req, res) => {
       message: "Erreur lors de la mise à jour de la tâche",
       error: err,
     });
+  }
+};
+
+// Archive task
+exports.archiveTask = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedTask = await Task.findByIdAndUpdate(
+      id,
+      { archived: true, updatedAt: Date.now() },
+      { new: true }
+    );
+    if (!updatedTask) {
+      return res.status(404).json({ message: "Tâche non trouvée" });
+    }
+    res.status(200).json(updatedTask);
+  } catch (err) {
+    res.status(500).json({
+      message: "Erreur lors de l'archivage de la tâche",
+      error: err,
+    });
+  }
+};
+
+// Unarchive task
+exports.unarchiveTask = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedTask = await Task.findByIdAndUpdate(
+      id,
+      { archived: false, updatedAt: Date.now() },
+      { new: true }
+    );
+    if (!updatedTask) {
+      return res.status(404).json({ message: "Tâche non trouvée" });
+    }
+    res.status(200).json(updatedTask);
+  } catch (err) {
+    res.status(500).json({
+      message: "Erreur lors du désarchivage de la tâche",
+      error: err,
+    });
+  }
+};
+
+//Get archived tasks by project
+exports.getArchivedTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find({ project: req.params.id, archived: true });
+    res.status(200).json(tasks);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
