@@ -23,8 +23,8 @@ const router = express.Router();
  *           description: La description de la tâche
  *         status:
  *           type: string
- *           enum: [à faire, en cours, terminé, annulé]
- *           default: à faire
+ *           enum: [TO_DO, DOING, DONE]
+ *           default: TO_DO
  *           description: Le statut actuel de la tâche
  *         dateDebut:
  *           type: string
@@ -58,7 +58,7 @@ const router = express.Router();
  *             email:
  *               type: string
  *               description: L'email de l'utilisateur
- *    
+ *
  */
 
 /**
@@ -211,30 +211,7 @@ router.put("/:id/inProgress", authMiddleware, taskController.setInProgress);
  */
 router.put("/:id/completed", authMiddleware, taskController.setCompleted);
 
-/**
- * @swagger
- * /tasks/{id}/cancelled:
- *   put:
- *     summary: Mettre une tâche en statut "annulé"
- *     tags: [Tâches]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID de la tâche à mettre en statut "annulé"
- *     responses:
- *       200:
- *         description: Tâche mise à jour à "annulé"
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Task'
- */
-router.put("/:id/cancelled", authMiddleware, taskController.setCancelled);
+// Archieve task needed
 
 /**
  * @swagger
