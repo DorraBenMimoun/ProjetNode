@@ -139,6 +139,77 @@ router.get("/verify/:token", userController.verifyUser);
  */
 router.post("/login", userController.loginUser);
 
+
+/**
+ * @swagger
+ * /users/forgot-password:
+ *   post:
+ *     summary: Demande de réinitialisation de mot de passe
+ *     description: Envoie un email contenant un lien pour réinitialiser le mot de passe.
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "user@example.com"
+ *     responses:
+ *       200:
+ *         description: Email envoyé avec succès
+ *       404:
+ *         description: Utilisateur non trouvé
+ *       500:
+ *         description: Erreur serveur
+ */
+router.post('/forgot-password', userController.forgotPassword);
+
+/**
+ * @swagger
+ * /users/reset-password/{token}:
+ *   post:
+ *     summary: Réinitialisation du mot de passe
+ *     description: Permet à un utilisateur de définir un nouveau mot de passe en utilisant un token.
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         description: Token de réinitialisation envoyé par email
+ *         schema:
+ *           type: string
+ *           example: "123456abcdef"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - newPassword
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 example: "newSecurePassword123"
+ *     responses:
+ *       200:
+ *         description: Mot de passe réinitialisé avec succès
+ *       400:
+ *         description: Token invalide ou expiré
+ *       500:
+ *         description: Erreur serveur
+ */
+router.post('/reset-password/:token', userController.resetPassword);
+
+
+
+
+
 /**
  * @swagger
  * /users:

@@ -6,8 +6,6 @@ import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { UserComponent } from './components/user/user.component';
-import { LoginComponent } from './components/login/login.component';
-import { SignupComponent } from './components/signup/signup.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -18,8 +16,6 @@ import { FormsModule } from '@angular/forms';
     DashboardComponent,
     TasksComponent,
     UserComponent,
-    LoginComponent,
-    SignupComponent,
     TaskListComponent,
     
   ],

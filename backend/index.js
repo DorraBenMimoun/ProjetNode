@@ -41,6 +41,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use("/users/", require("./routes/userRoute"));
 app.use("/tasks/",require("./routes/taskRoute"));
+app.use("/projects/",require("./routes/projectRoute"));
+app.use("/comments/",require("./routes/commentRoute"));
 
 app.get("/", (req, res) => {
   res.send("Bienvenue sur l'API de gestion des tâches !");

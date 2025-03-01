@@ -1,3 +1,4 @@
+const { request } = require("express");
 const mongoose = require("mongoose");
 
 const TaskSchema = new mongoose.Schema(
@@ -10,6 +11,18 @@ const TaskSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    checklist:[
+      {
+        title: { 
+          type:String,
+          required : true
+        },
+        done :{
+          type: Boolean,
+          default: false
+        }
+      }
+    ],
     status: {
       type: String,
       enum: ["TO_DO", "DOING", "DONE"],
@@ -37,6 +50,15 @@ const TaskSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    project: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+      required: true,
+    },
+    comments: [{ 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'Comment' }],
+
   },
   { timestamps: true }
 ); // Active `createdAt` et `updatedAt` automatiquement
