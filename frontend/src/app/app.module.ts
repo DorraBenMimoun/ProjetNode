@@ -12,6 +12,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { ProjetComponent } from './projet/projet.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { LandingComponent } from './pages/landing/landing.component';
+import { ProjectsComponent } from './pages/projects/projects.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     TaskListComponent,
     ProjetComponent,
     NavbarComponent,
+    LandingComponent,
+    ProjectsComponent,
     
   ],
   imports: [
