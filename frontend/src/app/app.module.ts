@@ -10,7 +10,6 @@ import { TaskListComponent } from './components/task-list/task-list.component';
 import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { authInterceptor } from './interceptors/auth.interceptor';
-import { NavbarComponent } from './components/navbar/navbar.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { ProjectsComponent } from './pages/projects/projects.component';
 
@@ -21,7 +20,6 @@ import { ProjectsComponent } from './pages/projects/projects.component';
     TasksComponent,
     UserComponent,
     TaskListComponent,
-    NavbarComponent,
     LandingComponent,
     ProjectsComponent,
     
