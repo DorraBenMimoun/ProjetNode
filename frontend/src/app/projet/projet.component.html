@@ -1,0 +1,48 @@
+<body>
+<div class="container">
+    <h2>Gestion des Projets</h2>
+  
+    <form [formGroup]="projectForm" (ngSubmit)="addProject()" class="project-form">
+      <input formControlName="name" placeholder="Nom du projet" required />
+      <textarea formControlName="description" placeholder="Description"></textarea>
+      <button type="submit" [disabled]="!projectForm.valid">Ajouter Projet</button>
+    </form>
+  
+    <div class="projects-list">
+      <div *ngFor="let project of projects" class="project-card">
+        <h3>{{ project.name }}</h3>
+        <p>{{ project.description }}</p>
+        <p><strong>Propriétaire:</strong> {{ project.owner?.email }}</p>
+  
+        <div class="actions">
+          <button (click)="deleteProject(project._id)">🗑️ </button>
+          <button  *ngIf="!project.archived" (click)="archiveProject(project._id)">📦 </button>
+          <button *ngIf="project.archived" (click)="unarchiveProject(project._id)">🔓</button>
+        </div>
+  
+        <div class="tasks">
+          <h4>Tâches</h4>
+          <ul>
+            <li *ngFor="let task of project.tasks">
+              {{ task.title }} ({{ task.status }})
+            </li>
+          </ul>
+        </div>
+  
+        <div class="members">
+          <h4>Membres</h4>
+          <ul>
+            <li *ngFor="let member of project.members">
+              {{ member.email }}
+              <button (click)="removeMember(project._id, member.email)">❌</button>
+            </li>
+          </ul>
+          <input [(ngModel)]="newMemberEmail[project._id]" placeholder="Email du membre">
+         <br>
+         <br> 
+          <button (click)="addMember(project._id, newMemberEmail[project._id])">Ajouter</button>          
+        </div>
+      </div>
+    </div>
+  </div>
+  </body>

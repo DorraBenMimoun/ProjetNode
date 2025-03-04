@@ -8,8 +8,10 @@ import { TasksComponent } from './components/tasks/tasks.component';
 import { UserComponent } from './components/user/user.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
 import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { ProjetComponent } from './projet/projet.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -18,13 +20,17 @@ import { authInterceptor } from './interceptors/auth.interceptor';
     TasksComponent,
     UserComponent,
     TaskListComponent,
+    ProjetComponent,
+    NavbarComponent,
     
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+
   ],
   providers: [
     provideHttpClient(withInterceptors([authInterceptor]))

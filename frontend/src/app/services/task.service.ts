@@ -15,31 +15,47 @@ interface Task {
   providedIn: 'root',
 })
 export class TaskService {
-  private apiUrl = 'http://localhost:9091/tasks';
+  private baseUrl = 'http://localhost:9091/tasks'; // Remplace par l’URL de ton backend
 
   constructor(private http: HttpClient) {}
 
-  getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.apiUrl);
+  getTasks(): Observable<any> {
+    return this.http.get(this.baseUrl);
   }
 
-  createTask(title: string, description: string): Observable<Task> {
-    return this.http.post<Task>(this.apiUrl, { title, description });
+  getTaskById(id: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${id}`);
   }
 
-  updateTask(id: string, title: string, description: string): Observable<Task> {
-    return this.http.put<Task>(`${this.apiUrl}/${id}`, { title, description });
+  createTask(task: any): Observable<any> {
+    return this.http.post(this.baseUrl, task);
   }
 
-  deleteTask(id: string): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
+  updateTask(id: string, task: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, task);
   }
 
-  setTaskInProgress(id: string): Observable<Task> {
-    return this.http.patch<Task>(`${this.apiUrl}/${id}/in-progress`, {});
+  deleteTask(id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
-  setTaskCompleted(id: string): Observable<Task> {
-    return this.http.patch<Task>(`${this.apiUrl}/${id}/completed`, {});
+  setTaskInProgress(id: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}/inProgress`, {});
+  }
+
+  setTaskCompleted(id: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}/completed`, {});
+  }
+
+  archiveTask(id: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${id}/archive`, {});
+  }
+
+  unarchiveTask(id: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${id}/unarchive`, {});
+  }
+
+  getArchivedTasks(projectId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/archived/${projectId}`);
   }
 }

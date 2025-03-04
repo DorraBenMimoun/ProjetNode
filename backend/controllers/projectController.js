@@ -157,6 +157,7 @@ exports.addMember = async (req, res) => {
 //remove member from project
 exports.removeMember = async (req, res) => {
     try {
+        
         const project = await Project.findOne({
         _id: req.params.id,
         owner: req.user._id,
@@ -167,8 +168,7 @@ exports.removeMember = async (req, res) => {
         }
     
         const { email } = req.body;
-        console.log(email);
-        console.log(project.members);
+     
 
         member = await User
         .findOne({ email })

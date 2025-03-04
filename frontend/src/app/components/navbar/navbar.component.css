@@ -1,0 +1,88 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+
+body { 
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Jost', sans-serif;
+    background: linear-gradient(to bottom, #a8c0ff, #fbc2eb);
+}
+
+/* Navbar */
+.navbar {
+    width: 95%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px; /* Réduit l'espace de padding */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+/* Logo ou titre */
+.navbar .brand {
+    font-size: 1.5rem; /* Légèrement réduit */
+    font-weight: bold;
+    color: #5d83ff;
+}
+
+/* Liens du menu */
+.navbar .nav-links {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .nav-links a {
+    color: #716afd;
+    text-decoration: none;
+    margin: 0 10px; /* Espacement réduit */
+    font-size: 1rem; /* Taille légèrement réduite */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease-in-out;
+    padding: 6px 10px; /* Ajustement du padding */
+    border-radius: 6px;
+}
+
+/* Effet au survol */
+.navbar .nav-links a:hover {
+    background-color: rgba(8, 15, 244, 0.1);
+    color: #8c40ff;
+    transform: translateY(-2px);
+}
+
+/* Barre de recherche plus compacte */
+.navbar .search-box input {
+    padding: 8px; /* Réduit la hauteur */
+    border: none;
+    border-radius: 15px;
+    width: 180px; /* Taille ajustée */
+    text-align: center;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+/* Icônes de connexion plus rapprochées */
+.navbar .auth-icons {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .auth-icons a {
+    color: #5d83ff;
+    font-size: 1.3rem; /* Taille ajustée */
+    margin-left: 20px; /* Réduction de l'espace */
+    transition: color 0.3s ease-in-out, transform 0.3s;
+}
+
+.navbar .auth-icons a:hover {
+    color: #8c40ff;
+    transform: scale(1.1);
+}

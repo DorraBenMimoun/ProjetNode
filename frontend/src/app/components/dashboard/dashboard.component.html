@@ -1,14 +1,51 @@
-<div class="container">
-	<aside class="sidebar">
-	  <h2>📌 Dashboard</h2>
-	  <nav>
-		<ul>
-		  <li>📋 Tâches</li>
-		</ul>
-	  </nav>
-	</aside>
-	<main class="content">
-	  <app-task-list></app-task-list>
-	</main>
-  </div>
-  
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+   
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <h1>Project Board</h1>
+        </header>
+        <div class="kanban-board">
+			<div class="column" (dragover)="allowDrop($event)" (drop)="drop($event)">
+                <h2>Backlog <span>6</span></h2>
+				<div class="card" draggable="true" (dragstart)="drag($event)">
+                    <span class="tag design">Design</span>
+                    <p>This is the title of the card for the thing that needs to be done.</p>
+                    <div class="card-footer">Dec 12 · 4 · 1</div>
+                </div>
+            </div>
+			<div class="column" (dragover)="allowDrop($event)" (drop)="drop($event)">
+                <h2>Ready <span>3</span></h2>
+				<div class="card" draggable="true" (dragstart)="drag($event)">
+                    <span class="tag dev">Dev</span>
+                    <p>This is the title of the card for the thing that needs to be done.</p>
+                    <div class="card-footer">Dec 12 · 4 · 1</div>
+                </div>
+            </div>
+			<div class="column" (dragover)="allowDrop($event)" (drop)="drop($event)">
+                <h2>Doing <span>2</span></h2>
+				<div class="card" draggable="true" (dragstart)="drag($event)">
+                    <span class="tag design">Design</span>
+                    <p>This is the title of the card for the thing that needs to be done.</p>
+                    <div class="card-footer">Dec 12 · 4 · 1</div>
+                </div>
+            </div>
+			<div class="column" (dragover)="allowDrop($event)" (drop)="drop($event)">
+                <h2>Review <span>3</span></h2>
+				<div class="card" draggable="true" (dragstart)="drag($event)">
+                    <span class="tag copywriting">Copywriting</span>
+                    <p>This is the title of the card for the thing that needs to be done.</p>
+                    <div class="card-footer">Dec 12 · 4 · 1</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
