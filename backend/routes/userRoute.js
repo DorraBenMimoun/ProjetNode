@@ -60,6 +60,20 @@ const router = express.Router();
  *     UserLogin:
  *       type: object
  *       properties:
+ *         username:
+ *           type: string
+ *           description: Nom d'utilisateur
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Adresse email de l'utilisateur
+ *       example:
+ *         email: "john@example.com"
+ *         password: "StrongPassword123"
+ * 
+ *     UserUpdate:
+ *       type: object
+ *       properties:
  *         email:
  *           type: string
  *           format: email
@@ -69,8 +83,8 @@ const router = express.Router();
  *           format: password
  *           description: Mot de passe sécurisé
  *       example:
+ *         username: "john_doe"
  *         email: "john@example.com"
- *         password: "StrongPassword123"
  */
 
 /**
@@ -246,4 +260,84 @@ router.get("/", userController.getAllUsers);
  */
 router.get("/profile", authMiddleware, userController.getProfile);
 
+/**
+ * @swagger
+ * /users/profile:
+ *   put:
+ *     summary: Mettre à jour le profil de l'utilisateur connecté
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserUpdate'
+ *     responses:
+ *       200:
+ *         description: Profil utilisateur mis à jour avec succès
+ *       400:
+ *         description: Données invalides
+ *       401:
+ *         description: Non autorisé, token manquant ou invalide
+ *       500:
+ *         description: Erreur serveur
+ */
+router.put("/profile", authMiddleware, userController.updateProfile);
+
+
+/**
+ * @swagger
+ * /users/password:
+ *   put:
+ *     summary: Mettre à jour le mot de passe de l'utilisateur connecté
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 example: "currentPassword123"
+ *               newPassword:
+ *                 type: string
+ *                 example: "newSecurePassword123"
+ *     responses:
+ *       200:
+ *         description: Mot de passe mis à jour avec succès
+ *       400:
+ *         description: Données invalides ou mot de passe actuel incorrect
+ *       401:
+ *         description: Non autorisé, token manquant ou invalide
+ *       500:
+ *         description: Erreur serveur
+ */
+router.put("/password", authMiddleware, userController.updatePassword);
+
+/**
+ * @swagger
+ * /users:
+ *   delete:
+ *     summary: Supprimer le compte de l'utilisateur connecté
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Compte utilisateur supprimé avec succès
+ *       401:
+ *         description: Non autorisé, token manquant ou invalide
+ *       500:
+ *         description: Erreur serveur
+ */
+router.delete("/", authMiddleware, userController.deleteAccount);
 module.exports = router;

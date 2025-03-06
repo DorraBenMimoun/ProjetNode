@@ -29,7 +29,6 @@ const generateToken = (user) => {
 // Register a new user
 exports.registerUser = async (req, res) => {
   try {
-    console.log("user",req.body);
     
     const { email, password, username } = req.body;
 
@@ -109,13 +108,16 @@ exports.verifyUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-
+console.log("email",email)
+console.log("password",password)
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const user = await User.findOne({ email });
-    if (!user) {
+    console.log("user",user)
+    if (user===null) {
+      console.log("user",user)
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
@@ -218,9 +220,31 @@ exports.getProfile = async (req, res) => {
 // Update user profile (Protected)
 exports.updateProfile = async (req, res) => {
   try {
+
     const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
+    }
+    if (req.body.email && req.body.email !== user.email) {
+      const emailExists = await User.findOne({ email: req.body.email });
+      if (emailExists) {
+      return res.status(400).json({ message: "This email is already in use" });
+      }
+
+      user.email = req.body.email;
+      user.isVerified = false;
+      const verificationToken = jwt.sign({ email: req.body.email }, process.env.JWT_SECRET, { expiresIn: "1d" });
+      user.verificationToken = verificationToken;
+
+      const verificationLink = `http://localhost:9901/users/verify/${verificationToken}`;
+      const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: req.body.email,
+      subject: "Email Verification",
+      text: `Click the following link to verify your account: ${verificationLink}`,
+      };
+
+      await transporter.sendMail(mailOptions);
     }
 
     user.username = req.body.username || user.username;
@@ -228,7 +252,7 @@ exports.updateProfile = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({
+    res.status(201).json({
       message: "Profile updated successfully",
       user: {
         id: user._id,
@@ -267,3 +291,19 @@ exports.updatePassword = async (req, res) => {
   }
 };
 
+
+// Delete user account (Protected)
+exports.deleteAccount = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await user.deleteOne();
+
+    res.status(200).json({ message: "Account deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

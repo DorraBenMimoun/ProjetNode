@@ -10,7 +10,11 @@
   
 
     <div class="auth-icons">
-        <a routerLink="login"><i class="fas fa-user"></i></a> <!-- Profil -->
-        <a href="#"><i class="fas fa-sign-in-alt"></i></a> <!-- Connexion -->
-    </div>
+         <!-- Affiche l'icône du profil si l'utilisateur est connecté -->
+         <a *ngIf="isLoggedIn" routerLink="profile"><i class="fas fa-user"></i></a>
+        
+         <!-- Affiche l'icône de connexion si l'utilisateur n'est pas connecté -->
+         <a *ngIf="!isLoggedIn" routerLink="login"><i class="fas fa-sign-in-alt"></i></a>
+         <a *ngIf="isLoggedIn" (click)="logout()"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
 </nav>
