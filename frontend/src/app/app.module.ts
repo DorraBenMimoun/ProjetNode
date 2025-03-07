@@ -6,14 +6,15 @@ import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { UserComponent } from './components/user/user.component';
-import { TaskListComponent } from './components/task-list/task-list.component';
 import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { ProjetComponent } from './projet/projet.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { LandingComponent } from './pages/landing/landing.component';
+import { LandingComponent } from './components/landing/landing.component';
 import { ProjectsComponent } from './pages/projects/projects.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ProjectService } from './services/project.service';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HomeComponent } from './components/home/home.component';
 
@@ -23,7 +24,6 @@ import { HomeComponent } from './components/home/home.component';
     DashboardComponent,
     TasksComponent,
     UserComponent,
-    TaskListComponent,
     ProjetComponent,
     NavbarComponent,
     LandingComponent,
@@ -38,11 +38,13 @@ import { HomeComponent } from './components/home/home.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    DragDropModule, 
+
 
   ],
   providers: [
     provideHttpClient(withInterceptors([authInterceptor]))
-  ],
+    ,ProjectService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

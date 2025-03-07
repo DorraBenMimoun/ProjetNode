@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProjectService } from '../services/project.service';
 
@@ -11,6 +11,7 @@ export class ProjetComponent {
   projects: any[] = [];
   projectForm: FormGroup;
   newMemberEmail: { [key: string]: string } = {};
+  @Output() projectsLoaded = new EventEmitter<any[]>(); // Événement pour transmettre les projets
 
   constructor(
     private projectService: ProjectService,
@@ -29,6 +30,7 @@ export class ProjetComponent {
   getProjects() {
     this.projectService.getProjects().subscribe((data) => {
       this.projects = data;
+      this.projectsLoaded.emit(this.projects);
     });
   }
 
