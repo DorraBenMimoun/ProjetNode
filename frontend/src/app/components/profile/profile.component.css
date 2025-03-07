@@ -1,0 +1,80 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Jost', sans-serif;
+    background: linear-gradient(to right, #d9a7c7, #fffcdc);
+}
+
+.main {
+    width: 350px;
+    padding: 20px;
+    background: linear-gradient(to right, #d9a7c7, #fffcdc);
+    border-radius: 10px;
+    box-shadow: 5px 20px 50px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+h2 {
+    color: #5d83ff;
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+}
+
+input {
+    width: 80%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+button {
+    width: 80%;
+    padding: 10px;
+    background: #7f9cff;
+    color: white;
+    font-size: 1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+button:hover {
+    background: #6d8efb;
+}
+
+.delete-btn {
+    background: #ff6b6b;
+}
+
+.delete-btn:hover {
+    background: #ff4949;
+}
+
+.success {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}

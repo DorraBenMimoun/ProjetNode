@@ -54,11 +54,7 @@ const TaskSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
       required: true,
-    },
-    comments: [{ 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: 'Comment' }],
-
+    }
   },
   { timestamps: true }
 ); // Active `createdAt` et `updatedAt` automatiquement

@@ -42,22 +42,28 @@ export class UserComponent {
       this.errorMessage = 'Email et mot de passe sont requis !';
       return;
     }
-
+  
     this.authService.login(this.loginData).subscribe({
       next: (res) => {
         console.log('Connexion réussie :', res);
-        this.authService.saveToken(res.token);
-        this.errorMessage = '';
-        this.successMessage = 'Connexion réussie ! Redirection...';
-
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']); // Change '/dashboard' selon ta route
-        }, 1500);
+        // Connexion réussie
+        if (res.token) {
+          console.log('Connexion réussie :', res);
+          this.authService.saveToken(res.token);  // Sauvegarder le token uniquement si la connexion est réussie
+          this.errorMessage = '';  // Effacer le message d'erreur
+          this.successMessage = 'Connexion réussie ! Redirection...';
+  
+          // Redirection vers le dashboard
+          this.router.navigate(['/dashboard']);
+        }
       },
       error: (err) => {
+        console.log('Erreur de connexion :', err);
+        // Si la connexion échoue, afficher un message d'erreur
         this.errorMessage = err.error.message || 'Échec de la connexion';
-        this.successMessage = '';
+        this.successMessage = '';  // Réinitialiser le message de succès
       }
     });
   }
+  
 }

@@ -15,6 +15,7 @@ import { LandingComponent } from './components/landing/landing.component';
 import { ProjectsComponent } from './pages/projects/projects.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProjectService } from './services/project.service';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { ProjectService } from './services/project.service';
     NavbarComponent,
     LandingComponent,
     ProjectsComponent,
+    ProfileComponent,
     
   ],
   imports: [

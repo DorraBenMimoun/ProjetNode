@@ -17,7 +17,6 @@ exports.getAllProjectsUser = async (req, res) => {
 };
 
 // Create a new project
-
 exports.createProject = async (req, res) => {
     try {
         const { name, description } = req.body;

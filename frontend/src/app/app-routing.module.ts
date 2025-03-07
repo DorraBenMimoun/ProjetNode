@@ -7,6 +7,7 @@ import { TasksComponent } from './components/tasks/tasks.component';
 import { ProjetComponent } from './projet/projet.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { ProjectsComponent } from './pages/projects/projects.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'task', component: TasksComponent},
   { path: 'project', component: ProjetComponent},
   { path: 'login', component: UserComponent},
+  { path: 'profile', component: ProfileComponent}
 
 
 

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="main">
+    <h2>Profil</h2>
+    
+    <!-- Formulaire pour la mise à jour du nom d'utilisateur et de l'email -->
+    <form (ngSubmit)="onUpdateProfile()" #profileForm="ngForm">
+      <label for="username">Nom d'utilisateur</label>
+      <input type="text" id="username" name="username" [(ngModel)]="userData.username" required>
+  
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" [(ngModel)]="userData.email" required>
+  
+      <button type="submit">Mettre à jour les informations</button>
+    </form>
+
+    <!-- Formulaire pour la mise à jour du mot de passe -->
+    <form (ngSubmit)="onUpdatePassword()" #passwordForm="ngForm">
+      <label for="currentPassword">Mot de passe actuel</label>
+      <input type="password" id="currentPassword" name="currentPassword" [(ngModel)]="userData.currentPassword" required>
+  
+      <label for="newPassword">Nouveau mot de passe</label>
+      <input type="password" id="newPassword" name="newPassword" [(ngModel)]="userData.newPassword" required>
+  
+      <button type="submit">Mettre à jour le mot de passe</button>
+    </form>
+  
+    <!-- Bouton de suppression du compte -->
+    <button class="delete-btn" (click)="onDeleteAccount()">Supprimer le compte</button>
+  
+    <!-- Messages de succès ou d'erreur -->
+    <p *ngIf="successMessage" class="success">{{ successMessage }}</p>
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+</div>
+</body>
+</html>

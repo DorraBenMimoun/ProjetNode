@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = 'http://localhost:9091/users';
-
+ // Un BehaviorSubject pour suivre l'état de la connexion
+  isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
   constructor(private http: HttpClient) {}
 
   onSignup(userData: any): Observable<any> {
@@ -17,7 +18,10 @@ export class AuthService {
   }
 
   login(credentials: any): Observable<any> {
+    this.isLoggedInSubject.next(true);  // Émet que l'utilisateur est maintenant connecté
+    console.log("credentials",credentials);
     return this.http.post(`${this.apiUrl}/login`, credentials);
+
   }
 
   saveToken(token: string): void {
@@ -30,9 +34,20 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    this.isLoggedInSubject.next(false);  // Émet que l'utilisateur est maintenant déconnecté
+
   }
 
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+  // Méthode pour vérifier si l'utilisateur est connecté
+  isLoggedIn(): boolean {
+      return !!localStorage.getItem('token');
+    }
+
+      // Méthode pour obtenir l'état de la connexion
+  getIsLoggedIn() {
+    return this.isLoggedInSubject.asObservable();
   }
 }
