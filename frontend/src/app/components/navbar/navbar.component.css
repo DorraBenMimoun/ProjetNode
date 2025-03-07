@@ -29,7 +29,7 @@ body {
 .navbar .brand {
     font-size: 1.5rem; /* Légèrement réduit */
     font-weight: bold;
-    color: #5d83ff;
+    color: #860d70;
 }
 
 /* Liens du menu */
@@ -39,7 +39,7 @@ body {
 }
 
 .navbar .nav-links a {
-    color: #716afd;
+    color: #9c43a5;
     text-decoration: none;
     margin: 0 10px; /* Espacement réduit */
     font-size: 1rem; /* Taille légèrement réduite */
@@ -54,7 +54,7 @@ body {
 /* Effet au survol */
 .navbar .nav-links a:hover {
     background-color: rgba(8, 15, 244, 0.1);
-    color: #8c40ff;
+    color: #860d70;
     transform: translateY(-2px);
 }
 
@@ -76,13 +76,13 @@ body {
 }
 
 .navbar .auth-icons a {
-    color: #5d83ff;
+    color: #860d70;
     font-size: 1.3rem; /* Taille ajustée */
     margin-left: 20px; /* Réduction de l'espace */
     transition: color 0.3s ease-in-out, transform 0.3s;
 }
 
 .navbar .auth-icons a:hover {
-    color: #8c40ff;
+    color: #860d70;
     transform: scale(1.1);
 }
