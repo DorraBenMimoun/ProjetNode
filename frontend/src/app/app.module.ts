@@ -15,6 +15,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { ProjectsComponent } from './pages/projects/projects.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     LandingComponent,
     ProjectsComponent,
     ProfileComponent,
+    HomeComponent,
     
   ],
   imports: [

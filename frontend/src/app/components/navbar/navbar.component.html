@@ -1,20 +1,22 @@
 <nav class="navbar">
-    <div class="brand">Task4You</div>
-    
-    <div class="nav-links">
-        <a routerLink="project"><i class="fas fa-folder"></i> Projects</a>
-        <a routerLink="task"><i class="fas fa-tasks"></i> Tasks</a>
-        <a routerLink="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+    <div class="brand">
+        <a routerLink="home"> Task4You</a>
     </div>
 
-  
+    <div class="nav-links">
+        <a *ngIf="isLoggedIn" routerLink="project"><i class="fas fa-folder"></i> Projects</a>
+        <a *ngIf="isLoggedIn" routerLink="task"><i class="fas fa-tasks"></i> Tasks</a>
+        <a *ngIf="isLoggedIn" routerLink="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+    </div>
+
+
 
     <div class="auth-icons">
-         <!-- Affiche l'icône du profil si l'utilisateur est connecté -->
-         <a *ngIf="isLoggedIn" routerLink="profile"><i class="fas fa-user"></i></a>
-        
-         <!-- Affiche l'icône de connexion si l'utilisateur n'est pas connecté -->
-         <a *ngIf="!isLoggedIn" routerLink="login"><i class="fas fa-sign-in-alt"></i></a>
-         <a *ngIf="isLoggedIn" (click)="logout()"><i class="fas fa-sign-out-alt"></i></a>
-        </div>
+        <!-- Affiche l'icône du profil si l'utilisateur est connecté -->
+        <a *ngIf="isLoggedIn" routerLink="profile"><i class="fas fa-user"></i></a>
+
+        <!-- Affiche l'icône de connexion si l'utilisateur n'est pas connecté -->
+        <a *ngIf="!isLoggedIn" routerLink="login"><i class="fas fa-sign-in-alt"></i></a>
+        <a *ngIf="isLoggedIn" (click)="logout()"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
 </nav>
