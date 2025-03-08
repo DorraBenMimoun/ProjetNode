@@ -340,4 +340,6 @@ router.put("/password", authMiddleware, userController.updatePassword);
  *         description: Erreur serveur
  */
 router.delete("/", authMiddleware, userController.deleteAccount);
+
+
 module.exports = router;

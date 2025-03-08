@@ -241,5 +241,39 @@ exports.unarchiveProject = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
     };
+
+exports.getTotalProjectsCount = async (req, res) => {
+        try {
+          const userId = req.user._id;
+      
+          // Compter le nombre de projets créés par l'utilisateur
+          const totalProjects = await Project.countDocuments({ owner: userId });
+      
+          res.status(200).json({ totalProjects });
+        } catch (error) {
+          res.status(500).json({ message: "Erreur serveur", error });
+        }
+      };
+      
+exports.getTotalCollaboratorsCount = async (req, res) => {
+        try {
+          const userId = req.user._id;
+          console.log(userId);
+      
+          // Récupérer tous les projets de l'utilisateur
+          const projects = await Project.find({ owner: userId }).select("members");
+            console.log(projects);
+          // Extraire tous les collaborateurs uniques
+          const collaboratorsSet = new Set();
+          projects.forEach((project) => {
+            project.members.forEach((collaboratorId) => collaboratorsSet.add(collaboratorId.toString()));
+          });
+      console.log(collaboratorsSet);
+          res.status(200).json({ totalCollaborators: collaboratorsSet.size });
+        } catch (error) {
+          res.status(500).json({ message: "Erreur serveur", error: error.message });
+        }
+      };
+      
  
 

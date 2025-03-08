@@ -357,5 +357,101 @@ router.post("/:id/unarchive", authMiddleware, taskController.unarchiveTask);
  */
 router.get("/archived/:id", authMiddleware, taskController.getArchivedTasks);
 
+/**
+ * @swagger
+ * /tasks/status/Distribution:
+ *   get:
+ *     summary: Récupérer la distribution des statuts des tâches
+ *     tags: [Tasks]
+ *     responses:
+ *       200:
+ *         description: Distribution des statuts des tâches récupérée avec succès
+ *       401:
+ *         description: Non autorisé, token manquant ou invalide
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get("/status/Distribution", authMiddleware, taskController.getTaskStatusDistribution);
 
+/**
+ * @swagger
+ * /tasks/creation/evolution:
+ *   get:
+ *     summary: Récupérer l'évolution de la création des tâches
+ *     tags: [Tasks]
+ *     responses:
+ *       200:
+ *         description: Évolution de la création des tâches récupérée avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 date:
+ *                   type: string
+ *                   format: date
+ *                   description: Date de création
+ *                   example: "2024-02-14"
+ *                 count:
+ *                   type: integer
+ *                   description: Nombre de tâches créées à cette date
+ *                   example: 5
+ *       401:
+ *         description: Non autorisé, token manquant ou invalide
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get("/creation/evolution", authMiddleware, taskController.getTasksCreatedLast30Days);
+
+/**
+ * @swagger
+ * /tasks/completion/average:
+ *   get:
+ *     summary: Récupérer le temps moyen de complétion des tâches
+ *     tags: [Tasks]
+ *     responses:
+ *       200:
+ *         description: Temps moyen de complétion des tâches récupéré avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 averageCompletionTime:
+ *                   type: number
+ *                   description: Temps moyen de complétion des tâches en heures
+ *                   example: 48.5
+ *       401:
+ *         description: Non autorisé, token manquant ou invalide
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get("/completion/average", authMiddleware, taskController.getAverageCompletionTime);
+
+/**
+ * @swagger
+ * /tasks/count/total:
+ *   get:
+ *     summary: Récupérer le nombre total de tâches
+ *     tags: [Tasks]
+ *     responses:
+ *       200:
+ *         description: Nombre total de tâches récupéré avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalTasksCount:
+ *                   type: integer
+ *                   description: Nombre total de tâches
+ *                   example: 150
+ *       401:
+ *         description: Non autorisé, token manquant ou invalide
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get("/count/total", authMiddleware, taskController.getTotalTasksCount);
+
+module.exports = router;
 module.exports = router;

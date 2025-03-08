@@ -17,6 +17,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProjectService } from './services/project.service';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HomeComponent } from './components/home/home.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { Dashboard2Component } from './components/dashboard2/dashboard2.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -30,6 +33,7 @@ import { HomeComponent } from './components/home/home.component';
     ProjectsComponent,
     ProfileComponent,
     HomeComponent,
+    Dashboard2Component,
     
   ],
   imports: [
@@ -39,6 +43,8 @@ import { HomeComponent } from './components/home/home.component';
     FormsModule,
     ReactiveFormsModule,
     DragDropModule, 
+    NgxChartsModule,
+    BrowserAnimationsModule
 
 
   ],

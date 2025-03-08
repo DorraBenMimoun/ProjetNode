@@ -316,5 +316,53 @@ router.put("/:id", authMiddleware, projectController.updateProject);
  */
 router.delete("/:id", authMiddleware, projectController.deleteProject);
 
+/**
+ * @swagger
+ * /projects/count/total:
+ *   get:
+ *     summary: Obtenir le nombre total de projets
+ *     tags: [Projects]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Nombre total de projets récupéré avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 count:
+ *                   type: integer
+ *                   example: 42
+ *       500:
+ *         description: Erreur interne du serveur
+ */
+router.get("/count/total", authMiddleware, projectController.getTotalProjectsCount);
+
+/**
+ * @swagger
+ * /projects/collaborators/count:
+ *   get:
+ *     summary: Obtenir le nombre total de collaborateurs de tous les projets
+ *     tags: [Projects]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Nombre total de collaborateurs récupéré avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 count:
+ *                   type: integer
+ *                   example: 5
+ *       500:
+ *         description: Erreur interne du serveur
+ */
+router.get("/collaborators/count", authMiddleware, projectController.getTotalCollaboratorsCount);
+
 
 module.exports = router;

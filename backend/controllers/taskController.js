@@ -218,3 +218,156 @@ exports.getArchivedTasks = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+exports.getTaskStatusDistribution = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    // Récupérer tous les projets de l'utilisateur
+    const projects = await Project.find({ owner: userId }).select("_id");
+    const projectIds = projects.map((project) => project._id);
+
+    // Répartition par statut
+    const statusDistribution = await Task.aggregate([
+      { $match: { project: { $in: projectIds } } },
+      { $group: { _id: "$status", count: { $sum: 1 } } },
+    ]);
+
+    const statusStats = {
+      TO_DO: 0,
+      DOING: 0,
+      DONE: 0,
+    };
+
+    statusDistribution.forEach((entry) => {
+      statusStats[entry._id] = entry.count;
+    });
+
+    res.status(200).json(statusStats);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error });
+  }
+};
+exports.getTasksCreatedLast30Days = async (req, res) => {
+  try {
+    const userId = req.user._id; // Récupération de l'utilisateur connecté
+console.log(userId);
+    // Définir la période (des 30 derniers jours jusqu'à aujourd'hui)
+    const today = new Date();
+    const startDate = new Date();
+    startDate.setDate(today.getDate() - 30);
+    startDate.setHours(0, 0, 0, 0); // Début du premier jour
+    today.setHours(23, 59, 59, 999); // Fin du jour actuel
+
+    console.log("Intervalle de recherche:", startDate, today);
+
+    // Récupérer tous les projets de l'utilisateur
+    const projects = await Project.find({ owner: userId }).select("_id");
+    console.log("Projets trouvés:", projects);
+    const projectIds = projects.map((project) => project._id);
+
+    // Vérifier que l'utilisateur a bien des projets
+    if (projectIds.length === 0) {
+      return res.status(200).json({ message: "Aucun projet trouvé", dailyStats: {} });
+    }
+
+    // Récupérer les tâches qui ont commencé dans les 30 derniers jours
+    const tasksByDay = await Task.aggregate([
+      {
+        $match: {
+          project: { $in: projectIds },
+          createdAt: { $gte: startDate, $lte: today }, // Filtrer par dateDebut
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone: "UTC" } },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } }, // Trier par date croissante
+    ]);
+
+    console.log("Tâches trouvées par jour:", tasksByDay);
+
+    // Construire un objet avec les 30 derniers jours, initialisés à 0
+    let dailyStats = {};
+    for (let i = 0; i < 30; i++) {
+      const currentDate = new Date(startDate);
+      currentDate.setDate(startDate.getDate() + i);
+      const dateString = currentDate.toISOString().split("T")[0]; // Format YYYY-MM-DD
+      dailyStats[dateString] = 0;
+    }
+
+    // Mettre à jour les jours où des tâches ont été créées
+    tasksByDay.forEach((task) => {
+      dailyStats[task._id] = task.count;
+    });
+
+    res.status(200).json(dailyStats);
+  } catch (error) {
+    res.status(500).json({
+      message: "Erreur lors de la récupération des statistiques des tâches commencées",
+      error: error.message,
+    });
+  }
+};
+
+exports.getAverageCompletionTime = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    // Récupérer tous les projets de l'utilisateur
+    const projects = await Project.find({ owner: userId }).select("_id");
+    const projectIds = projects.map((project) => project._id);
+
+    // Calculer le temps moyen pour terminer une tâche
+    const avgCompletionTime = await Task.aggregate([
+      {
+        $match: {
+          project: { $in: projectIds },
+          status: "DONE",
+          dateTerminee: { $exists: true, $ne: null },
+        },
+      },
+      {
+        $project: {
+          completionTime: {
+            $subtract: ["$dateTerminee", "$createdAt"],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          avgTime: { $avg: "$completionTime" },
+        },
+      },
+    ]);
+
+    const averageCompletionTime = avgCompletionTime.length
+      ? avgCompletionTime[0].avgTime / (1000 * 60 * 60) // Convertir en heures
+      : 0;
+
+    res.status(200).json({ averageCompletionTime: `${averageCompletionTime.toFixed(2)} heures` });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error });
+  }
+};
+
+exports.getTotalTasksCount = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    // Récupérer tous les projets de l'utilisateur
+    const projects = await Project.find({ owner: userId }).select("_id");
+    const projectIds = projects.map((project) => project._id);
+
+    // Compter toutes les tâches associées aux projets de l'utilisateur
+    const totalTasks = await Task.countDocuments({ project: { $in: projectIds } });
+
+    res.status(200).json({ totalTasks });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error });
+  }
+};
+

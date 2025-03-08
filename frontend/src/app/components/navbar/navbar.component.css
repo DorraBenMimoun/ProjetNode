@@ -31,6 +31,9 @@ body {
     font-weight: bold;
     color: #860d70;
 }
+.navbar .brand:hover {
+    transform: scale(1.1);
+}
 
 /* Liens du menu */
 .navbar .nav-links {
