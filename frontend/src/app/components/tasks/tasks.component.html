@@ -12,7 +12,7 @@
       <option value="" disabled selected>Choisir un projet</option>
       <option *ngFor="let project of projects" [value]="project._id">
         {{ project.name }}
-      </option>è
+      </option>
     </select>
     <button (click)="addTask()">Ajouter Tâche</button>
   </div>
@@ -25,11 +25,11 @@
         cdkDropList 
         [id]="status" 
         [cdkDropListData]="taskColumns[status]" 
-        [cdkDropListConnectedTo]="statuses"
+        [cdkDropListConnectedTo]="['TO_DO', 'DOING', 'DONE']"
         class="task-list"
         (cdkDropListDropped)="drop($event)">
         
-        <div *ngFor="let task of taskColumns[status] " cdkDrag class="task-card">
+        <div *ngFor="let task of taskColumns[status] " cdkDrag [cdkDragData]="task" class="task-card">
           <div class="task-header">
             <h4>{{ task.title }}</h4>
             <button class="delete-btn" (click)="deleteTask(task._id!)">🗑️</button>

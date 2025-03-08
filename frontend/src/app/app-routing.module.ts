@@ -15,7 +15,8 @@ const routes: Routes = [
   { path: 'task', component: TasksComponent},
   { path: 'project', component: ProjetComponent},
   { path: 'login', component: UserComponent},
-  { path: 'profile', component: ProfileComponent}
+  { path: 'profile', component: ProfileComponent},
+  { path: 'dashboard/project', component: ProjetComponent},
 
 
 
