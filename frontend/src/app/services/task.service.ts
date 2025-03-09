@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Task } from '../models/task.model';
 
 
@@ -9,7 +9,8 @@ import { Task } from '../models/task.model';
 })
 export class TaskService {
   private apiUrl = 'http://localhost:9091/tasks'; 
-
+  private tasksSubject = new BehaviorSubject<Task[]>([]);  // Bien typé ici
+  tasks$: Observable<Task[]> = this.tasksSubject.asObservable();  // `tasks$` est un Observable<Task[]>
   constructor(private http: HttpClient) {}
 
   getTasks(): Observable<Task[]> {
@@ -50,9 +51,8 @@ export class TaskService {
     return this.http.put(`${this.apiUrl}/${id}/status`, { status: newStatus });
   }
 
-  // Récupérer les tâches d'un projet
-  //getTasksByProject(projectId: string): Observable<any> {
-   // return this.http.get(`${this.apiUrl}/project/${projectId}`);
-  //}
+  refreshTasks(): void {
+    this.getTasks(); 
+  }
   
 }

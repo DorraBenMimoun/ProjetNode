@@ -1,25 +1,25 @@
 <div class="home-container">
     <header class="hero">
-        <h1>Organisez et collaborez efficacement</h1>
-        <p>Gérez vos projets et tâches en toute simplicité avec Task4You</p>
-        <a routerLink="/login" class="btn-primary">Commencer</a>
+        <h1>Organize and collaborate efficiently</h1>
+        <p>Manage your projects and tasks with ease using Task4You</p>
+        <a *ngIf="!isLoggedIn" routerLink="/login" class="btn-primary">Get Started</a>
     </header>
 
     <section class="features">
         <div class="feature">
             <i class="fas fa-tasks"></i>
-            <h3>Gérez vos tâches</h3>
-            <p>Créez, assignez et suivez vos tâches en temps réel.</p>
+            <h3>Manage Your Tasks</h3>
+            <p>Create, assign, and track your tasks in real time.</p>
         </div>
         <div class="feature">
             <i class="fas fa-users"></i>
-            <h3>Collaboration facile</h3>
-            <p>Travaillez en équipe avec des tableaux et des listes partagées.</p>
+            <h3>Easy Collaboration</h3>
+            <p>Work as a team with shared boards and lists.</p>
         </div>
         <div class="feature">
             <i class="fas fa-chart-line"></i>
-            <h3>Suivi de projet</h3>
-            <p>Visualisez la progression et analysez la productivité.</p>
+            <h3>Project Tracking</h3>
+            <p>Visualize progress and analyze productivity.</p>
         </div>
     </section>
 </div>

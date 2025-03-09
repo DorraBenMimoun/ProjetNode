@@ -51,5 +51,8 @@ export class ProjectService {
   unarchiveProject(projectId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/${projectId}/unarchive`, {});
   }
-  
+  getTasksByProjectId(projectId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${projectId}/tasks`);
+}
+
 }

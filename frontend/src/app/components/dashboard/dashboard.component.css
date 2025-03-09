@@ -141,3 +141,29 @@ aside {
     background: rgb(245, 234, 245);
     box-shadow: 0px 4px 10px rgba(109, 43, 104, 0.15);
 }
+.delete-btn {
+	background: none;
+	border: none;
+	color: #fa7972;
+	font-size: 1.2rem;
+	cursor: pointer;
+	transition: 0.3s;
+  }
+  
+  .delete-btn:hover {
+	color: #ff4d4d;
+  }
+  [cdkDropList] {
+	min-height: 200px;
+	border: 2px dashed #ccc;
+	padding: 10px;
+  }
+  
+  [cdkDrag] {
+	cursor: grab;
+	padding: 10px;
+	margin: 5px 0;
+	background-color: white;
+	border-radius: 5px;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  }

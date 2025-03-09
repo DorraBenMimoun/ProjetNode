@@ -42,7 +42,7 @@ exports.createTask = async (req, res) => {
     const isOwner = project.owner.equals(req.user._id);
     const isMember = project.members.includes(req.user._id);
 
-    if (!isOwner || !isMember) {
+    if (!isOwner && !isMember) {
       return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
     }
 
@@ -91,7 +91,7 @@ exports.getTaskById = async (req, res) => {
     const isOwner = project.owner.equals(req.user._id);
     const isMember = project.members.includes(req.user._id);
 
-    if (!isOwner || !isMember) {
+    if (!isOwner && !isMember) {
       return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
     }
 
@@ -118,8 +118,9 @@ exports.updateTask = async (req, res) => {
     const isOwner = project.owner.equals(req.user._id);
     const isMember = project.members.includes(req.user._id);
 
-    if (!isOwner || !isMember) {
-      return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
+    if (!isOwner && !isMember)
+      {
+      return res.status(403).json({ message: "You are not authorized to update tasks in this project" });
     }
 
     task.title = req.body.title || task.title;
@@ -165,7 +166,7 @@ exports.deleteTask = async (req, res) => {
     const isOwner = project.owner.equals(req.user._id);
     const isMember = project.members.includes(req.user._id);
 
-    if (!isOwner || !isMember) {
+    if (!isOwner && !isMember) {
       return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
     }
 

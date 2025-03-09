@@ -3,7 +3,7 @@
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(to right, #d9a7c7, #fffcdc);
-    margin: 0;
+        margin: 0;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -11,235 +11,229 @@ body {
     color: #333;
 }
 
-.container {
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+/* 🔹 Sidebar (Projets) */
+aside {
+  position: fixed;
+  left: 0;
+  top: 60px; /* Ajuster selon la hauteur de ta navbar */
+  width: 240px;
+  height: calc(100vh - 60px); /* Ajuster la hauteur pour qu'elle ne dépasse pas la hauteur de l'écran */
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0px 4px 10px rgba(109, 43, 104, 0.15);
+  padding: 20px;
+  border-radius: 0 15px 15px 0;
+  transition: 0.3s;
+  margin-left: 4px; 
+
 }
 
-h2 {
-    text-align: center;
+aside:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* 🔹 Boutons et liens du sidebar */
+aside h2 {
+    font-size: 1.4rem;
     font-weight: 600;
-    font-size: 1.8rem;
-    color: #684d7a;
+    color: #800e45;
 }
 
-.project-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 25px;
+aside ul {
+    list-style: none;
+    padding: 0;
 }
 
-.project-form input,
-.project-form textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
+aside li {
+    background: rgba(255, 255, 255, 0.6);
+    padding: 10px;
+    margin-bottom: 8px;
     border-radius: 8px;
+    cursor: pointer;
     font-size: 1rem;
     transition: 0.3s;
-    background: #fdf7f9;
+    text-align: center;
 }
 
-.project-form input:focus,
-.project-form textarea:focus {
-    border-color: #d88fbe;
-    box-shadow: 0 0 8px rgba(217, 167, 199, 0.3);
-    outline: none;
-}
-
-.project-form button {
-    padding: 12px;
-    background-color: #d9a7c7;
-    color: rgb(28, 1, 31);
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.project-form button:hover {
-    background-color: #f4d3e8;
-}
-
-.projects-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.project-card {
-    padding: 20px;
-    border-radius: 12px;
-    background: white;
-    color: #333;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-    transition: 0.3s;
-}
-
-.project-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
-}
-
-.actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.actions button {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.actions button:hover {
+aside li:hover {
+    background: rgba(255, 255, 255, 0.8);
     transform: scale(1.05);
 }
 
-
-.tasks {
-    margin-top: 15px;
-}
-
-.tasks h4 {
-    font-size: 1.2rem;
-    color: #d9a7c7;
-}
-
-
-
-
-.task-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.task-description {
-  font-size: 0.9rem;
-  color: #555;
-  margin: 8px 0;
-}
-
-.task-footer {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  color: #777;
-}
-
-.task-status {
-  font-weight: 600;
-  color: #d88fbe;
-}
-
-.task-project {
-  font-style: italic;
-}
-
-.delete-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: #fa7972;
-  transition: 0.3s;
-}
-
-.delete-btn:hover {
-  color: #ffb1ac;
-}
-.task-card.cdk-drag-preview {
-  opacity: 0.8;
-  transform: rotate(3deg);
-}
-
-.task-card.cdk-drag-placeholder {
-  background: rgba(217, 167, 199, 0.3);
-  border: 2px dashed #d88fbe;
-}
-.tasks.cdk-drop-list-dragging {
-  background: rgba(255, 255, 255, 0.5);
-  border: 2px dashed #d88fbe;
-}
-.task-board {
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
+/* 🔹 Conteneur principal */
+.container {
+  max-width: 1000px;
+  margin-left: 270px; 
   padding: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* 🔹 Board de tâches */
+.task-board {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 10px;
 }
 
 .task-column {
-  flex: 1;
-  min-width: 300px;
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
+    flex: 1;
+    min-width: 300px;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: 0.3s;
 }
 
+.task-column:hover {
+    transform: translateY(-3px);
+}
+
+/* 🔹 Cartes de tâches */
 .task-list {
-  min-height: 200px;
-  padding: 10px;
-  border-radius: 8px;
-  background: #f9f9f9;
+    min-height: 200px;
+    padding: 10px;
+    border-radius: 8px;
+    background: #f9f9f9;
 }
 
 .task-card {
-  background: white;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  transition: 0.3s;
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
 }
 
 .task-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* 🔹 En-tête des tâches */
 .task-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
 }
 
+/* 🔹 Bouton suppression */
 .delete-btn {
-  background: none;
-  border: none;
-  color: #fa7972;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: 0.3s;
+    background: none;
+    border: none;
+    color: #fa7972;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .delete-btn:hover {
-  color: #ff4d4d;
+    color: #ff4d4d;
 }
+
+/* 🔹 Drag & Drop */
 [cdkDropList] {
-  min-height: 200px;
-  border: 2px dashed #ccc;
-  padding: 10px;
+    min-height: 200px;
+    border: 2px dashed rgba(200, 200, 200, 0.5);
+    padding: 10px;
+    transition: 0.3s;
+}
+
+[cdkDropList]:hover {
+    background: rgba(200, 200, 200, 0.2);
 }
 
 [cdkDrag] {
-  cursor: grab;
+    cursor: grab;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+/* 🔹 Formulaire d'ajout de tâche */
+.add-task-form {
+  margin-top: 20px;
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.add-task-form .form-header {
+  margin-bottom: 10px;
+}
+
+.add-task-form .input-field,
+.add-task-form .textarea-field {
+  width: 100%;
   padding: 10px;
-  margin: 5px 0;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+.add-task-form .input-field:focus,
+.add-task-form .textarea-field:focus {
+  border-color: #820141;
+  outline: none;
+}
+
+.add-task-form .add-btn {
+  background-color: #700c46;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.add-task-form .add-btn:hover {
+  background-color: #b31d66;
+}
+/* Page de bienvenue */
+.landing-page {
+  text-align: center;
+  top: 80px;
+  padding: 150px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.landing-page h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #700c46;
+}
+
+.landing-page p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.create-project-btn {
+  background-color: #700c46;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.create-project-btn:hover {
+  background-color: #b31d66;
 }

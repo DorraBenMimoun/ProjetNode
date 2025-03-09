@@ -54,8 +54,8 @@ export class UserComponent {
           this.loginErrorMessage = '';  
           this.loginSuccessMessage = 'Connexion réussie ! Redirection...';
   
-         
-          this.router.navigate(['/dashboard']);
+          // Redirection vers le dashboard
+          this.router.navigate(['/task']);
         }
       },
       error: (err) => {

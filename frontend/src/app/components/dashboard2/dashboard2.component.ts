@@ -24,7 +24,6 @@ export class Dashboard2Component implements OnInit {
     this.fetchTaskStatus();
     //this.fetchTaskEvolution();
     this.fetchCompletionTime();
-    console.log("listProjects", this.listProjects);
     this.dashboardService.getTotalTasksCount().subscribe(count => this.totalTasks = count.totalTasks);
     this.dashboardService.getTotalProjectsCount().subscribe(count => this.totalProjects = count.totalProjects);
     this.dashboardService.getTotalCollaboratorsCount().subscribe(count => this.totalCollaborators = count.totalCollaborators);
@@ -33,7 +32,6 @@ export class Dashboard2Component implements OnInit {
 
   fetchTaskStatus() {
     this.dashboardService.getTaskStatusDistribution().subscribe((data) => {
-      console.log("tasks status data", data.TO_DO);
       if (data) {
         this.taskStatusData = [
           { name: 'To Do', value: data.TO_DO ?? 0 },
@@ -44,7 +42,6 @@ export class Dashboard2Component implements OnInit {
         this.taskStatusData = [];
       }
 
-      console.log("tasks status data", this.taskStatusData);
     }, (error) => {
       console.error("Erreur récupération TaskStatus", error);
       this.taskStatusData = [];
@@ -53,7 +50,6 @@ export class Dashboard2Component implements OnInit {
   
   fetchTaskEvolution() {
     this.dashboardService.getTaskCreationEvolution().subscribe((data) => {
-      console.log("Raw tasks evolution data", data);
   
       if (data && typeof data === 'object') {
         // Extraire les dates existantes
@@ -87,7 +83,6 @@ export class Dashboard2Component implements OnInit {
           }
         ];
   
-        console.log("Formatted taskEvolutionData for chart:", this.taskEvolutionData);
       } else {
         this.taskEvolutionData = [];
       }
@@ -100,8 +95,7 @@ export class Dashboard2Component implements OnInit {
   
   fetchCompletionTime() {
     this.dashboardService.getAverageCompletionTime().subscribe((data) => {
-      console.log("average completion time", data);
-      this.avgCompletionTime = data?.averageCompletionTime ? `${data.averageCompletionTime} jours` : "Non disponible";
+      this.avgCompletionTime = data?.averageCompletionTime ? `${data.averageCompletionTime} Days` : "Non disponible";
     }, (error) => {
       console.error("Erreur récupération CompletionTime", error);
       this.avgCompletionTime = "Non disponible";

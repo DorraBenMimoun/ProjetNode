@@ -5,34 +5,34 @@
 </head>
 <body>
 <div class="main">
-    <h2>Profil</h2>
+    <h2>Profile</h2>
     
-    <!-- Formulaire pour la mise à jour du nom d'utilisateur et de l'email -->
+    <!-- Form for updating username and email -->
     <form (ngSubmit)="onUpdateProfile()" #profileForm="ngForm">
-      <label for="username">Nom d'utilisateur</label>
+      <label for="username">Username</label>
       <input type="text" id="username" name="username" [(ngModel)]="userData.username" required>
   
       <label for="email">Email</label>
       <input type="email" id="email" name="email" [(ngModel)]="userData.email" required>
   
-      <button type="submit">Mettre à jour les informations</button>
+      <button type="submit">Update Information</button>
     </form>
 
-    <!-- Formulaire pour la mise à jour du mot de passe -->
+    <!-- Form for updating password -->
     <form (ngSubmit)="onUpdatePassword()" #passwordForm="ngForm">
-      <label for="currentPassword">Mot de passe actuel</label>
+      <label for="currentPassword">Current Password</label>
       <input type="password" id="currentPassword" name="currentPassword" [(ngModel)]="userData.currentPassword" required>
   
-      <label for="newPassword">Nouveau mot de passe</label>
+      <label for="newPassword">New Password</label>
       <input type="password" id="newPassword" name="newPassword" [(ngModel)]="userData.newPassword" required>
   
-      <button type="submit">Mettre à jour le mot de passe</button>
+      <button type="submit">Update Password</button>
     </form>
   
-    <!-- Bouton de suppression du compte -->
-    <button class="delete-btn" (click)="onDeleteAccount()">Supprimer le compte</button>
+    <!-- Delete account button -->
+    <button class="delete-btn" (click)="onDeleteAccount()">Delete Account</button>
   
-    <!-- Messages de succès ou d'erreur -->
+    <!-- Success or error messages -->
     <p *ngIf="successMessage" class="success">{{ successMessage }}</p>
     <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
 </div>

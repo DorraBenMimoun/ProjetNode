@@ -24,7 +24,7 @@ exports.addComment = async (req, res) => {
         const isOwner = project.owner.equals(req.user._id);
         const isMember = project.members.includes(req.user._id);
     
-        if (!isOwner || !isMember) {
+        if (!isOwner && !isMember) {
           return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
         }
 

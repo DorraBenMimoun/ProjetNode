@@ -3,29 +3,29 @@
     <!-- KPIs -->
     <div class="stats">
         <div class="stat-card">
-          <h3>📌 Projets</h3>
+          <h3>📌 Projects</h3>
           <p *ngIf="totalProjects !== null && totalProjects !== undefined; else loading"> {{ totalProjects }} </p>
         </div>
         <div class="stat-card">
-          <h3>✅ Tâches</h3>
+          <h3>✅ Tasks</h3>
           <p *ngIf="totalTasks !== null && totalTasks !== undefined; else loading"> {{ totalTasks }} </p>
         </div>
         <div class="stat-card">
-          <h3>👥 Collaborateurs</h3>
+          <h3>👥 Collaborators</h3>
           <p *ngIf="totalCollaborators !== null && totalCollaborators !== undefined; else loading"> {{ totalCollaborators }} </p>
         </div>
       </div>
       
       <ng-template #loading>
-        <p>Chargement...</p>
+        <p>Loading...</p>
       </ng-template>
 
-<!-- SECTION DES GRAPHIQUES -->
+<!-- CHARTS SECTION -->
 <div class="charts-section">
 
-    <!-- Graphique Répartition des Tâches -->
+    <!-- Task Distribution Chart -->
     <div class="chart-container" *ngIf="taskStatusData.length > 0; else noData">
-      <h3>📌 Répartition des tâches</h3>
+      <h3>📌 Task Distribution</h3>
       <ngx-charts-pie-chart 
         [results]="taskStatusData"
         [view]="[400, 300]"
@@ -36,14 +36,13 @@
     </div>
   
     <ng-template #noData>
-      <p>Pas de données disponibles pour la répartition des tâches.</p>
+      <p>No data available for task distribution.</p>
     </ng-template>
   </div>
   
-    <!-- Temps moyen de complétion -->
+    <!-- Average Completion Time -->
     <div class="completion-time">
-      <h3>⏳ Temps moyen de complétion</h3>
+      <h3>⏳ Average Completion Time</h3>
       <p>{{ avgCompletionTime }}</p>
     </div>
   </div>
-  
