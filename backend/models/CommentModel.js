@@ -4,12 +4,12 @@ const commentSchema = new mongoose.Schema(
   {
     taskId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Task", // Référence au modèle Task
+      ref: "Task",
       required: true,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Référence au modèle User
+      ref: "User",
       required: true,
     },
     text: {
@@ -18,7 +18,7 @@ const commentSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // Ajoute automatiquement createdAt et updatedAt
+    timestamps: true, 
   }
 );
 

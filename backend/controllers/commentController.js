@@ -1,6 +1,7 @@
 const Comment = require("../models/CommentModel");
 const Task = require("../models/taskModel");
 const User = require("../models/userModel");
+const Project = require("../models/projectModel");
 
 // Ajouter un commentaire à une tâche
 exports.addComment = async (req, res) => {
@@ -16,6 +17,15 @@ exports.addComment = async (req, res) => {
         const task = await Task.findById(taskId);
         if (!task) {
             return res.status(404).json({ message: "Tâche non trouvée" });
+        }
+
+        // Vérifier si l'utilisateur est le propriétaire ou membre du projet
+        const project = await Project.findById(task.project);
+        const isOwner = project.owner.equals(req.user._id);
+        const isMember = project.members.includes(req.user._id);
+    
+        if (!isOwner || !isMember) {
+          return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
         }
 
         const newComment = new Comment({

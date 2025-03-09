@@ -16,18 +16,18 @@ const userSchema = new mongoose.Schema({
   },
   isVerified: {
     type: Boolean,
-    default: false, // Par défaut, l'utilisateur n'est pas vérifié
+    default: false, 
   },
   verificationToken: {
-    type: String, // Stocke le token de vérification
+    type: String,
   },
   resetToken: {
-    type: String, // Stocke le token de réinitialisation
-    default: null, // Par défaut, il n'y a pas de token de réinitialisation
+    type: String, 
+    default: null,
   },
   resetTokenExpiration: {
-    type: Date, // Stocke la date d'expiration du token de réinitialisation
-    default: null, // Par défaut, il n'y a pas de date d'expiration
+    type: Date, 
+    default: null,
   },
   createdAt: {
     type: Date,

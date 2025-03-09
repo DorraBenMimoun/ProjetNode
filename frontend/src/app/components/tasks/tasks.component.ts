@@ -106,7 +106,8 @@ export class TasksComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       const task = event.previousContainer.data[event.previousIndex];
-      console.log("📤 Mise à jour API :", task._id, { status: event.container.id });
+      const newStatus = event.container.id as Task['status'];
+      console.log("📤 Mise à jour API :", task._id, { status: newStatus });
   
       // Mise à jour locale immédiate
       transferArrayItem(
@@ -117,13 +118,15 @@ export class TasksComponent implements OnInit {
       );
   
       // Appel API pour sauvegarder le changement
-      this.taskService.updateTask(task._id!, { status: event.container.id as Task['status'] }).subscribe({
+      this.taskService.updateTask(task._id!, { status: newStatus }).subscribe({
         next: (updatedTask) => {
           console.log("✅ Statut mis à jour dans la base :", updatedTask);
+  
+          // Mise à jour de la tâche dans la colonne appropriée
           this.updateTaskInList(updatedTask);
   
-          // 🔄 Rafraîchir la liste des tâches après mise à jour
-          this.getTasks();
+          // Mettre à jour les colonnes locales sans refaire un getTasks()
+          this.filterTasks();
         },
         error: (error) => {
           console.error("❌ Erreur lors du changement de statut", error);
@@ -140,20 +143,21 @@ export class TasksComponent implements OnInit {
     }
   }
   
-  
-  
-  
-  
-  
-  
-  
-
   updateTaskInList(updatedTask: Task): void {
-    const index = this.tasks.findIndex((task) => task._id === updatedTask._id);
-    if (index !== -1) {
-      this.tasks[index] = updatedTask; // Remplace la tâche mise à jour dans la liste
+    // Recherche la tâche dans la colonne appropriée (TO_DO, DOING, DONE)
+    for (const status of this.statuses) {
+      const column = this.taskColumns[status];
+      const index = column.findIndex(task => task._id === updatedTask._id);
+      
+      if (index !== -1) {
+        column[index] = updatedTask; // Remplacer la tâche dans la colonne
+        break; // Terminer la boucle dès qu'on trouve et met à jour la tâche
+      }
     }
   }
+  
+  
+  
   
 
   private resetNewTask(): void {
@@ -197,5 +201,8 @@ export class TasksComponent implements OnInit {
       error: (error) => console.error('Erreur lors du désarchivage', error)
     });
   }
+ 
+  
+
   
 }

@@ -46,5 +46,13 @@ export class TaskService {
   unarchiveTask(id: string): Observable<Task> {
     return this.http.patch<Task>(`${this.apiUrl}/${id}/unarchived`, {});
   }
+  updateTaskStatus(id: string, newStatus: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/status`, { status: newStatus });
+  }
+
+  // Récupérer les tâches d'un projet
+  //getTasksByProject(projectId: string): Observable<any> {
+   // return this.http.get(`${this.apiUrl}/project/${projectId}`);
+  //}
   
 }

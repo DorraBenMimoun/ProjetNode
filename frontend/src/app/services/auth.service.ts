@@ -18,13 +18,14 @@ export class AuthService {
   }
 
   login(credentials: any): Observable<any> {
-    this.isLoggedInSubject.next(true);  // Émet que l'utilisateur est maintenant connecté
     console.log("credentials",credentials);
     return this.http.post(`${this.apiUrl}/login`, credentials);
 
   }
 
   saveToken(token: string): void {
+    this.isLoggedInSubject.next(true);  // Émet que l'utilisateur est maintenant connecté
+
     localStorage.setItem('token', token);
   }
 

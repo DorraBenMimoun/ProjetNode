@@ -1,11 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ProjectService } from '../../services/project.service';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { TaskService } from '../../services/task.service';
+
 interface Task {
   _id?: string;
   title: string;
   description?: string;
-  status?: string;
+  status: string;
+  project: string; 
+  createdBy: string;  // Utilisateur qui a créé la tâche
+  archived?: boolean;  // Si la tâche est archivée ou non
 }
+
 
 @Component({
   selector: 'app-dashboard',
@@ -13,77 +21,72 @@ interface Task {
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
-  tasks: Task[] = [];
-  newTaskTitle: string = '';
-  newTaskDescription: string = '';
-  
-  constructor(private http: HttpClient) {}
+  projects: any[] = [];
+  selectedProject: any = null;  // Projet sélectionné pour afficher ses tâches
+    newTask = { title: '', description: '', status: 'To Do' };
+  statuses = ['To Do', 'Doing', 'Done'];
+  taskColumns: { [key: string]: any[] } = {
+    'To Do': [],
+    'Doing': [],
+    'Done': []
+  };
+  draggedTask: any = null;
+
+  @Input() projectId: string = ''; // Récupère l'ID du projet sélectionné
+  constructor(private projectService: ProjectService, private taskService: TaskService) {}
 
   ngOnInit() {
-    this.fetchTasks();
+    this.getProjects();
   }
 
-  fetchTasks() {
-    this.http.get<Task[]>('http://localhost:9091/tasks/').subscribe(
-      (data) => (this.tasks = data),
-      (error) => console.error('Error fetching tasks', error)
-    );
+  getProjects() {
+    this.projectService.getProjects().subscribe((data) => {
+      this.projects = data;
+    });
   }
 
+  selectProject(project: string) {
+    console.log('Projet sélectionné:', project);  // Vérifiez si le projet est bien sélectionné
+    this.selectedProject = project;
+  }
+
+
+  loadProjects(): void {
+    this.projectService.getProjects().subscribe(projects => {
+      console.log('Projets récupérés:', projects);  // Vérifiez ici si vous obtenez bien les projets
+
+      this.projects = projects;
+    });
+  }
+
+  // Ajouter une nouvelle tâche
   addTask() {
-    if (!this.newTaskTitle.trim()) return;
-    const newTask: Task = { title: this.newTaskTitle, description: this.newTaskDescription };
-    
-    this.http.post<Task>('http://localhost:9091/tasks/', newTask).subscribe(
-      (task) => {
-        this.tasks.push(task);
-        this.newTaskTitle = '';
-        this.newTaskDescription = '';
-      },
-      (error) => console.error('Error adding task', error)
-    );
-  }
+    if (this.newTask.title.trim() && this.selectedProject) {
+      const taskToAdd: Task = {
+        ...this.newTask,
+        project: this.selectedProject,
+        createdBy: "USER_ID", // Remplace par l'ID réel
+        archived: false
+      };
 
-  deleteTask(id: string) {
-    this.http.delete(`http://localhost:9091/tasks/${id}`).subscribe(
-      () => {
-        this.tasks = this.tasks.filter(task => task._id !== id);
-      },
-      (error) => console.error('Error deleting task', error)
-    );
-  }
 
-  updateTask(task: Task) {
-    this.http.put(`http://localhost:9091/tasks/${task._id}`, task).subscribe(
-      (updatedTask) => {
-        const index = this.tasks.findIndex(t => t._id === task._id);
-        if (index !== -1) this.tasks[index] = updatedTask as Task;
-      },
-      (error) => console.error('Error updating task', error)
-    );
-  }
-  draggedElement: HTMLElement | null = null;
-
-  allowDrop(event: DragEvent): void {
-    event.preventDefault();
-  }
-
-  drag(event: DragEvent): void {
-    const target = event.target as HTMLElement;
-    if (target.classList.contains('card')) {
-      this.draggedElement = target;
-      event.dataTransfer?.setData("text/plain", ""); // Requis pour Firefox
     }
   }
-
-  drop(event: DragEvent): void {
-    event.preventDefault();
-    if (this.draggedElement) {
-      const column = (event.target as HTMLElement).closest('.column');
-      if (column) {
-        column.appendChild(this.draggedElement);
-      }
-      this.draggedElement = null;
+  // Drag & Drop - Changer le statut d'une tâche
+  drop(event: CdkDragDrop<Task[]>, newStatus: string) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      const task = event.previousContainer.data[event.previousIndex];
+      task.status = newStatus;
+      this.taskService.updateTaskStatus(task._id as string, newStatus).subscribe(() => {
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+      });
     }
   }
 }

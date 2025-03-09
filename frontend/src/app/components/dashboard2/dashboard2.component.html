@@ -22,16 +22,7 @@
 
 <!-- SECTION DES GRAPHIQUES -->
 <div class="charts-section">
-    <!-- Liste des Projets -->
 
-    <div class="project-list">
-        <h3>📋 Liste des Projets</h3>
-        <ul>
-          <li *ngFor="let project of listProjects">
-            <a [routerLink]="['/project', project.id]">{{ project.name }}</a>
-          </li>
-        </ul>
-      </div>
     <!-- Graphique Répartition des Tâches -->
     <div class="chart-container" *ngIf="taskStatusData.length > 0; else noData">
       <h3>📌 Répartition des tâches</h3>

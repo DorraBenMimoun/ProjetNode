@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const { v4: uuidv4 } = require('uuid');
+const Project = require("../models/projectModel");
+const Task = require("../models/taskModel");
 
 require("dotenv").config();
 
@@ -17,7 +19,6 @@ const transporter = nodemailer.createTransport({
 });
 
 
-// Helper function to generate JWT Token
 const generateToken = (user) => {
   return jwt.sign(
     { id: user._id, email: user.email },
@@ -26,7 +27,6 @@ const generateToken = (user) => {
   );
 };
 
-// Register a new user
 exports.registerUser = async (req, res) => {
   try {
     
@@ -80,11 +80,9 @@ exports.registerUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-// Vérification du token pour activer le compte
 exports.verifyUser = async (req, res) => {
   try {
-    console.log("hellooo")
-    console.log("token",req.params)
+ 
     const { token } = req.params;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -104,20 +102,16 @@ exports.verifyUser = async (req, res) => {
     res.status(500).json({ message: "Invalid or expired token", error: error.message });
   }
 };
-// Login user
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-console.log("email",email)
-console.log("password",password)
+
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const user = await User.findOne({ email });
-    console.log("user",user)
     if (user===null) {
-      console.log("user",user)
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
@@ -299,6 +293,22 @@ exports.deleteAccount = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    // Remove user from project members if they exist
+    const projects = await Project.find({ members: user._id });
+    for (const project of projects) {
+      project.members.pull(user._id); // Remove user from members array
+      await project.save();
+    }
+
+ 
+    // Remove tasks associated with the user's projects
+    const userProjects = await Project.find({ owner: user._id });
+    for (const project of userProjects) {
+      await Task.deleteMany({ projectId: project._id });
+    }
+
+       // Remove projects where the user is the owner
+       await Project.deleteMany({ owner: user._id });
 
     await user.deleteOne();
 

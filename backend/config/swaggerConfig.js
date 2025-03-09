@@ -32,18 +32,6 @@ const options = {
   apis: ["./routes/*.js"], // Inclut les fichiers de routes pour générer la doc
 };
 
-const swaggerOptions = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Task Management API",
-      version: "1.0.0",
-      description: "API de gestion des tâches avec WebSockets et authentification",
-    },
-    servers: [{ url: "http://localhost:9091" }],
-  },
-  apis: ["./routes/*.js"], 
-};
 
 
 const swaggerDocs = swaggerJsdoc(options);

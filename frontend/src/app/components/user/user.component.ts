@@ -9,8 +9,10 @@ import { Router } from '@angular/router';
 })
 export class UserComponent {
   isSignup = false;
-  errorMessage = '';
-  successMessage = '';
+  loginErrorMessage = '';
+  loginSuccessMessage = '';
+  signUpErrorMessage = '';
+  signUpSuccessMessage = '';
 
   signupData = { username: '', email: '', password: '' };
   loginData = { email: '', password: '' };
@@ -19,49 +21,47 @@ export class UserComponent {
 
   onSignup() {
     if (!this.signupData.username || !this.signupData.email || !this.signupData.password) {
-      this.errorMessage = 'Tous les champs sont obligatoires !';
+      this.signUpErrorMessage = 'Tous les champs sont obligatoires !';
       return;
     }
 
     this.authService.onSignup(this.signupData).subscribe({
       next: (res) => {
         console.log('Inscription réussie :', res);
-        this.successMessage = 'Inscription réussie ! Vérifiez votre email pour l’activation.';
-        this.errorMessage = '';
+        this.signUpSuccessMessage = 'Inscription réussie ! Vérifiez votre email pour l’activation.';
+        this.signUpErrorMessage = '';
         this.signupData = { username: '', email: '', password: '' };
       },
       error: (err) => {
-        this.errorMessage = err.error.message || 'Échec de l’inscription';
-        this.successMessage = '';
+        this.signUpErrorMessage = err.error.message || 'Échec de l’inscription';
+        this.signUpSuccessMessage = '';
       }
     });
   }
 
   onLogin() {
     if (!this.loginData.email || !this.loginData.password) {
-      this.errorMessage = 'Email et mot de passe sont requis !';
+      this.loginErrorMessage = 'Email et mot de passe sont requis !';
       return;
     }
   
     this.authService.login(this.loginData).subscribe({
       next: (res) => {
         console.log('Connexion réussie :', res);
-        // Connexion réussie
         if (res.token) {
           console.log('Connexion réussie :', res);
-          this.authService.saveToken(res.token);  // Sauvegarder le token uniquement si la connexion est réussie
-          this.errorMessage = '';  // Effacer le message d'erreur
-          this.successMessage = 'Connexion réussie ! Redirection...';
+          this.authService.saveToken(res.token);  
+          this.loginErrorMessage = '';  
+          this.loginSuccessMessage = 'Connexion réussie ! Redirection...';
   
-          // Redirection vers le dashboard
+         
           this.router.navigate(['/dashboard']);
         }
       },
       error: (err) => {
         console.log('Erreur de connexion :', err);
-        // Si la connexion échoue, afficher un message d'erreur
-        this.errorMessage = err.error.message || 'Échec de la connexion';
-        this.successMessage = '';  // Réinitialiser le message de succès
+        this.loginErrorMessage = err.error.message || 'Échec de la connexion';
+        this.loginSuccessMessage = '';  
       }
     });
   }

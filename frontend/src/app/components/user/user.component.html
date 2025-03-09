@@ -15,6 +15,8 @@
 			<input type="email" name="email" placeholder="Email" required [(ngModel)]="signupData.email">
 			<input type="password" name="password" placeholder="Password" required [(ngModel)]="signupData.password">
 			<button type="submit">Sign up</button>
+			<p *ngIf="signUpErrorMessage" class="error" style="color: red; text-align: center;">{{ signUpErrorMessage }}</p>
+			<p *ngIf="signUpSuccessMessage" class="success" style="color: red; text-align: center;">{{ signUpSuccessMessage }}</p>
 		  </form>
 		</div>
 	  
@@ -24,10 +26,11 @@
 			<input type="email" name="email" placeholder="Email" required [(ngModel)]="loginData.email">
 			<input type="password" name="password" placeholder="Password" required [(ngModel)]="loginData.password">
 			<button type="submit">Login</button>
+			<p *ngIf="loginErrorMessage" class="error" style="color: red; text-align: center;">{{ loginErrorMessage }}</p>
+			<p *ngIf="loginSuccessMessage" class="success" style="color: red; text-align: center;">{{ loginSuccessMessage }}</p>
 		  </form>
 		</div>
 	  
-		<p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
 	  </div>
 </body>
 </html>

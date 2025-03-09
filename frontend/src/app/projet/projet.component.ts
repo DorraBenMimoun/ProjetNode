@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProjectService } from '../services/project.service';
 
@@ -7,12 +7,14 @@ import { ProjectService } from '../services/project.service';
   templateUrl: './projet.component.html',
   styleUrl: './projet.component.css'
 })
-export class ProjetComponent {
+export class ProjetComponent implements OnInit{
   projects: any[] = [];
   projectForm: FormGroup;
   newMemberEmail: { [key: string]: string } = {};
   @Output() projectsLoaded = new EventEmitter<any[]>(); // Événement pour transmettre les projets
-
+  selectedProject: any | null = null;
+  @Output() projectSelected = new EventEmitter<string>();
+  addMemberErrorMessage = '';
   constructor(
     private projectService: ProjectService,
     private fb: FormBuilder
@@ -32,6 +34,10 @@ export class ProjetComponent {
       this.projects = data;
       this.projectsLoaded.emit(this.projects);
     });
+  }
+  selectProject(project: any) {
+    this.selectedProject = project;
+    this.projectSelected.emit(project._id);
   }
 
   addProject() {
@@ -59,7 +65,8 @@ export class ProjetComponent {
       console.log(`Membre ${memberEmail} ajouté au projet ${projectId}`);
       this.getProjects();
     }, error => {
-      console.error("Error adding member:", error);
+      this.addMemberErrorMessage = error.error.message || "Error adding member";
+      console.error("Error adding member:", error.error.message);
     });
   }
 

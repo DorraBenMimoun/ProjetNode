@@ -20,6 +20,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent},
   { path: 'home', component: HomeComponent},
   { path: 'dashboard2', component: Dashboard2Component},
+  { path: 'dashboard/project', component: ProjetComponent},
 
 
 

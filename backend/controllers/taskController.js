@@ -1,7 +1,7 @@
 const Task = require("../models/taskModel");
 const Project = require("../models/projectModel");
+const Comment = require("../models/CommentModel");
 
-// Get all tasks for the authenticated user
 exports.getAllTasksUser = async (req, res) => {
   try {
     const tasks = await Task.find({ createdBy: req.user._id });
@@ -13,7 +13,6 @@ exports.getAllTasksUser = async (req, res) => {
 
 exports.getAllTasks = async (req, res) => {
   try {
-    console.log("hello");
     
     const tasks = await Task.find({});
     res.status(200).json(tasks);
@@ -22,9 +21,9 @@ exports.getAllTasks = async (req, res) => {
   }
 };
 
-// Create a new task
 exports.createTask = async (req, res) => {
   try {
+
     const { title, description,projectId } = req.body;
 
     if (!title) {
@@ -32,6 +31,19 @@ exports.createTask = async (req, res) => {
     }
     if (!projectId) {
       return res.status(400).json({ message: "Project ID is required" });
+    }
+
+    const project = await Project.findById(projectId);
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    const isOwner = project.owner.equals(req.user._id);
+    const isMember = project.members.includes(req.user._id);
+
+    if (!isOwner || !isMember) {
+      return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
     }
 
     const newTask = new Task({
@@ -56,7 +68,7 @@ exports.createTask = async (req, res) => {
   }
 };
 
-// Get a single task by ID
+
 exports.getTaskById = async (req, res) => {
   try {
     const task = await Task.findOne({
@@ -70,6 +82,18 @@ exports.getTaskById = async (req, res) => {
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
+    const project = await Project.findById(task.project);
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    const isOwner = project.owner.equals(req.user._id);
+    const isMember = project.members.includes(req.user._id);
+
+    if (!isOwner || !isMember) {
+      return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
+    }
 
     res.status(200).json(task);
   } catch (error) {
@@ -77,7 +101,7 @@ exports.getTaskById = async (req, res) => {
   }
 };
 
-// Update a task
+
 exports.updateTask = async (req, res) => {
   try {
     const task = await Task.findOne({ _id: req.params.id });
@@ -85,9 +109,31 @@ exports.updateTask = async (req, res) => {
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
+    const project = await Project.findById(task.project);
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    const isOwner = project.owner.equals(req.user._id);
+    const isMember = project.members.includes(req.user._id);
+
+    if (!isOwner || !isMember) {
+      return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
+    }
 
     task.title = req.body.title || task.title;
     task.description = req.body.description || task.description;
+
+    if (req.body.status) {
+      task.status = req.body.status;
+
+      if (req.body.status === "DOING") {
+      task.dateDebut = Date.now();
+      } else if (req.body.status === "DONE") {
+      task.dateTerminee = Date.now();
+      }
+    }
 
     await task.save();
 
@@ -100,7 +146,6 @@ exports.updateTask = async (req, res) => {
   }
 };
 
-// Delete a task
 exports.deleteTask = async (req, res) => {
   try {
     const task = await Task.findOne({
@@ -111,7 +156,20 @@ exports.deleteTask = async (req, res) => {
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
+    const project = await Project.findById(task.project);
 
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    const isOwner = project.owner.equals(req.user._id);
+    const isMember = project.members.includes(req.user._id);
+
+    if (!isOwner || !isMember) {
+      return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
+    }
+
+    await Comment.deleteMany({ taskId: task._id });
     await task.deleteOne();
 
     res.status(200).json({ message: "Task deleted successfully" });
@@ -120,7 +178,6 @@ exports.deleteTask = async (req, res) => {
   }
 };
 
-// Mettre à jour le statut de la tâche à "en cours"
 exports.setInProgress = async (req, res) => {
   const { id } = req.params;
   try {
@@ -146,7 +203,6 @@ exports.setInProgress = async (req, res) => {
   }
 };
 
-// Mettre à jour le statut de la tâche à "terminé"
 exports.setCompleted = async (req, res) => {
   const { id } = req.params;
   try {
@@ -167,10 +223,10 @@ exports.setCompleted = async (req, res) => {
   }
 };
 
-// Archive task
 exports.archiveTask = async (req, res) => {
   const { id } = req.params;
   try {
+    
     const updatedTask = await Task.findByIdAndUpdate(
       id,
       { archived: true, updatedAt: Date.now() },
@@ -188,7 +244,6 @@ exports.archiveTask = async (req, res) => {
   }
 };
 
-// Unarchive task
 exports.unarchiveTask = async (req, res) => {
   const { id } = req.params;
   try {
@@ -209,7 +264,6 @@ exports.unarchiveTask = async (req, res) => {
   }
 };
 
-//Get archived tasks by project
 exports.getArchivedTasks = async (req, res) => {
   try {
     const tasks = await Task.find({ project: req.params.id, archived: true });
@@ -222,11 +276,9 @@ exports.getTaskStatusDistribution = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    // Récupérer tous les projets de l'utilisateur
     const projects = await Project.find({ owner: userId }).select("_id");
     const projectIds = projects.map((project) => project._id);
 
-    // Répartition par statut
     const statusDistribution = await Task.aggregate([
       { $match: { project: { $in: projectIds } } },
       { $group: { _id: "$status", count: { $sum: 1 } } },
@@ -249,28 +301,22 @@ exports.getTaskStatusDistribution = async (req, res) => {
 };
 exports.getTasksCreatedLast30Days = async (req, res) => {
   try {
-    const userId = req.user._id; // Récupération de l'utilisateur connecté
-console.log(userId);
-    // Définir la période (des 30 derniers jours jusqu'à aujourd'hui)
+    const userId = req.user._id; 
+
     const today = new Date();
     const startDate = new Date();
     startDate.setDate(today.getDate() - 30);
     startDate.setHours(0, 0, 0, 0); // Début du premier jour
     today.setHours(23, 59, 59, 999); // Fin du jour actuel
 
-    console.log("Intervalle de recherche:", startDate, today);
 
-    // Récupérer tous les projets de l'utilisateur
     const projects = await Project.find({ owner: userId }).select("_id");
-    console.log("Projets trouvés:", projects);
     const projectIds = projects.map((project) => project._id);
 
-    // Vérifier que l'utilisateur a bien des projets
     if (projectIds.length === 0) {
       return res.status(200).json({ message: "Aucun projet trouvé", dailyStats: {} });
     }
 
-    // Récupérer les tâches qui ont commencé dans les 30 derniers jours
     const tasksByDay = await Task.aggregate([
       {
         $match: {
@@ -287,9 +333,7 @@ console.log(userId);
       { $sort: { _id: 1 } }, // Trier par date croissante
     ]);
 
-    console.log("Tâches trouvées par jour:", tasksByDay);
 
-    // Construire un objet avec les 30 derniers jours, initialisés à 0
     let dailyStats = {};
     for (let i = 0; i < 30; i++) {
       const currentDate = new Date(startDate);
@@ -298,7 +342,6 @@ console.log(userId);
       dailyStats[dateString] = 0;
     }
 
-    // Mettre à jour les jours où des tâches ont été créées
     tasksByDay.forEach((task) => {
       dailyStats[task._id] = task.count;
     });
@@ -316,11 +359,9 @@ exports.getAverageCompletionTime = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    // Récupérer tous les projets de l'utilisateur
     const projects = await Project.find({ owner: userId }).select("_id");
     const projectIds = projects.map((project) => project._id);
 
-    // Calculer le temps moyen pour terminer une tâche
     const avgCompletionTime = await Task.aggregate([
       {
         $match: {
@@ -345,10 +386,10 @@ exports.getAverageCompletionTime = async (req, res) => {
     ]);
 
     const averageCompletionTime = avgCompletionTime.length
-      ? avgCompletionTime[0].avgTime / (1000 * 60 * 60) // Convertir en heures
+      ? avgCompletionTime[0].avgTime / (1000 * 60 * 60 * 24) // Convertir en jours
       : 0;
 
-    res.status(200).json({ averageCompletionTime: `${averageCompletionTime.toFixed(2)} heures` });
+    res.status(200).json({ averageCompletionTime: `${averageCompletionTime.toFixed(2)}` });
   } catch (error) {
     res.status(500).json({ message: "Erreur serveur", error });
   }
@@ -358,11 +399,9 @@ exports.getTotalTasksCount = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    // Récupérer tous les projets de l'utilisateur
     const projects = await Project.find({ owner: userId }).select("_id");
     const projectIds = projects.map((project) => project._id);
 
-    // Compter toutes les tâches associées aux projets de l'utilisateur
     const totalTasks = await Task.countDocuments({ project: { $in: projectIds } });
 
     res.status(200).json({ totalTasks });

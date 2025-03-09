@@ -57,7 +57,7 @@ const TaskSchema = new mongoose.Schema(
     }
   },
   { timestamps: true }
-); // Active `createdAt` et `updatedAt` automatiquement
+); 
 
 // Middleware pour mettre à jour `updatedAt` à chaque modification
 TaskSchema.pre("save", function (next) {

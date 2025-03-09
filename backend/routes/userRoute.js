@@ -60,20 +60,6 @@ const router = express.Router();
  *     UserLogin:
  *       type: object
  *       properties:
- *         username:
- *           type: string
- *           description: Nom d'utilisateur
- *         email:
- *           type: string
- *           format: email
- *           description: Adresse email de l'utilisateur
- *       example:
- *         email: "john@example.com"
- *         password: "StrongPassword123"
- * 
- *     UserUpdate:
- *       type: object
- *       properties:
  *         email:
  *           type: string
  *           format: email
@@ -82,6 +68,20 @@ const router = express.Router();
  *           type: string
  *           format: password
  *           description: Mot de passe sécurisé
+ *       example:
+ *         email: "john@example.com"
+ *         password: "StrongPassword123"
+ * 
+ *     UserUpdate:
+ *       type: object
+ *       properties:
+ *         username:
+ *           type: string
+ *           description: Nom d'utilisateur
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Adresse email de l'utilisateur
  *       example:
  *         username: "john_doe"
  *         email: "john@example.com"

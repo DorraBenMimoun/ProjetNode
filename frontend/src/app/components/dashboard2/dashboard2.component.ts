@@ -24,29 +24,13 @@ export class Dashboard2Component implements OnInit {
     this.fetchTaskStatus();
     //this.fetchTaskEvolution();
     this.fetchCompletionTime();
-    this.fetchProjects();
     console.log("listProjects", this.listProjects);
     this.dashboardService.getTotalTasksCount().subscribe(count => this.totalTasks = count.totalTasks);
     this.dashboardService.getTotalProjectsCount().subscribe(count => this.totalProjects = count.totalProjects);
     this.dashboardService.getTotalCollaboratorsCount().subscribe(count => this.totalCollaborators = count.totalCollaborators);
   }
 
-  fetchProjects() {
-    this.projectService.getProjects().subscribe((data) => {
-      console.log("projects list data", data);
-      if (data && Array.isArray(data)) {
-        this.listProjects = data.map(project => ({
-          id: project._id,
-          name: project.name
-        }));
-      } else {
-        this.listProjects = [];
-      }
-    }, (error) => {
-      console.error("Erreur récupération ProjectsList", error);
-      this.listProjects = [];
-    });
-  }
+
   fetchTaskStatus() {
     this.dashboardService.getTaskStatusDistribution().subscribe((data) => {
       console.log("tasks status data", data.TO_DO);

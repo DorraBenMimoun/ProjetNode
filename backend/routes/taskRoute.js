@@ -87,6 +87,25 @@ const router = express.Router();
  *           type: string
  *           format: uuid
  *           description: L'ID du projet auquel la tâche appartient
+ *     UpdateTask:
+ *       type: object
+ *       required:
+ *         - title
+ *         - description
+ *         - status
+ *       properties:
+ *         title:
+ *           type: string
+ *           description: Le titre de la tâche
+ *           example: "Implémenter le système de notifications"
+ *         description:
+ *           type: string
+ *           description: La description de la tâche
+ *           example: "Ajouter un système de notifications en temps réel pour les mises à jour de projet"
+ *         status:
+ *           type: string
+ *           enum: [TO_DO, DOING, DONE]
+ *           default: DOING
  *           
  */
 
@@ -179,7 +198,7 @@ router.get("/:id", authMiddleware, taskController.getTaskById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Task'
+ *             $ref: '#/components/schemas/UpdateTask'
  *     responses:
  *       200:
  *         description: Tâche mise à jour
@@ -187,6 +206,12 @@ router.get("/:id", authMiddleware, taskController.getTaskById);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Task'
+ *       400:
+ *         description: Requête invalide
+ *       404:
+ *         description: Tâche non trouvée
+ *       500:
+ *         description: Erreur serveur
  */
 router.put("/:id", authMiddleware, taskController.updateTask);
 
