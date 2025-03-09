@@ -54,7 +54,7 @@ export class UserComponent {
           this.successMessage = 'Connexion réussie ! Redirection...';
   
           // Redirection vers le dashboard
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/task']);
         }
       },
       error: (err) => {
