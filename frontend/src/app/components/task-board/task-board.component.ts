@@ -1,6 +1,7 @@
 // src/app/components/task-board/task-board.component.ts
 import { Component, Input, OnChanges } from '@angular/core';
 import { TaskService } from '../../services/task.service';
+import { ProjectService } from '../../services/project.service';
 import { Task } from '../../models/task.model';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ToastrService } from 'ngx-toastr';
@@ -10,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './task-board.component.html',
   styleUrls: ['./task-board.component.css']
 })
-export class TaskBoardComponent implements OnChanges {
+export class TaskBoardComponent {
   @Input() projectId!: string;
   @Input() projectName!: string;
 
@@ -35,24 +36,26 @@ export class TaskBoardComponent implements OnChanges {
   showAddTaskForm: boolean = false;
   statuses = ['TO_DO', 'DOING', 'DONE'];
 
-  constructor(private taskService: TaskService, private toastr: ToastrService) {}
+  constructor(private taskService: TaskService, private projectService: ProjectService, private toastr: ToastrService) {}
 
 
-  ngOnChanges(): void {
+  ngOnChanges() {
     this.loadTasks();
   }
 
   loadTasks() {
-    this.taskService.getTasks().subscribe({
+    this.projectService.getTasksByProjectId(this.projectId).subscribe({
       next: (tasks) => {
-        const filtered = tasks.filter(t => t.project === this.projectId);
         this.taskColumns = {
-          TO_DO: filtered.filter(t => t.status === 'TO_DO'),
-          DOING: filtered.filter(t => t.status === 'DOING'),
-          DONE: filtered.filter(t => t.status === 'DONE')
+          TO_DO: tasks.filter(t => t.status === 'TO_DO'),
+          DOING: tasks.filter(t => t.status === 'DOING'),
+          DONE: tasks.filter(t => t.status === 'DONE')
         };
       },
-      error: (err) => console.error("Erreur tâches", err)
+      error: (err) => {
+        console.error("Erreur tâches", err);
+        this.toastr.error('Erreur lors de la récupération des tâches', 'Erreur');
+      }
     });
   }
 
