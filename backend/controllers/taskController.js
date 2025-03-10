@@ -13,7 +13,6 @@ exports.getAllTasksUser = async (req, res) => {
 
 exports.getAllTasks = async (req, res) => {
   try {
-    
     const tasks = await Task.find({});
     res.status(200).json(tasks);
   } catch (error) {
@@ -23,8 +22,7 @@ exports.getAllTasks = async (req, res) => {
 
 exports.createTask = async (req, res) => {
   try {
-
-    const { title, description,projectId } = req.body;
+    const { title, description, projectId } = req.body;
 
     if (!title) {
       return res.status(400).json({ message: "Title is required" });
@@ -40,10 +38,14 @@ exports.createTask = async (req, res) => {
     }
 
     const isOwner = project.owner.equals(req.user._id);
-    const isMember = project.members.includes(req.user._id);
+    const isMember = project.members.some(
+      (member) => member._id.toString() === req.user._id.toString()
+    );
 
     if (!isOwner && !isMember) {
-      return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
+      return res.status(403).json({
+        message: "You are not authorized to add tasks to this project",
+      });
     }
 
     const newTask = new Task({
@@ -56,8 +58,9 @@ exports.createTask = async (req, res) => {
     await newTask.save();
 
     //add task to project
-    await Project.findByIdAndUpdate
-    (projectId, { $push: { tasks: newTask._id } });
+    await Project.findByIdAndUpdate(projectId, {
+      $push: { tasks: newTask._id },
+    });
 
     res.status(201).json({
       message: "Task created successfully.",
@@ -67,7 +70,6 @@ exports.createTask = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 
 exports.getTaskById = async (req, res) => {
   try {
@@ -89,10 +91,14 @@ exports.getTaskById = async (req, res) => {
     }
 
     const isOwner = project.owner.equals(req.user._id);
-    const isMember = project.members.includes(req.user._id);
+    const isMember = project.members.some(
+      (member) => member._id.toString() === req.user._id.toString()
+    );
 
     if (!isOwner && !isMember) {
-      return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
+      return res.status(403).json({
+        message: "You are not authorized to add tasks to this project",
+      });
     }
 
     res.status(200).json(task);
@@ -100,7 +106,6 @@ exports.getTaskById = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 
 exports.updateTask = async (req, res) => {
   try {
@@ -116,11 +121,14 @@ exports.updateTask = async (req, res) => {
     }
 
     const isOwner = project.owner.equals(req.user._id);
-    const isMember = project.members.includes(req.user._id);
+    const isMember = project.members.some(
+      (member) => member._id.toString() === req.user._id.toString()
+    );
 
-    if (!isOwner && !isMember)
-      {
-      return res.status(403).json({ message: "You are not authorized to update tasks in this project" });
+    if (!isOwner && !isMember) {
+      return res.status(403).json({
+        message: "You are not authorized to update tasks in this project",
+      });
     }
 
     task.title = req.body.title || task.title;
@@ -130,9 +138,9 @@ exports.updateTask = async (req, res) => {
       task.status = req.body.status;
 
       if (req.body.status === "DOING") {
-      task.dateDebut = Date.now();
+        task.dateDebut = Date.now();
       } else if (req.body.status === "DONE") {
-      task.dateTerminee = Date.now();
+        task.dateTerminee = Date.now();
       }
     }
 
@@ -164,10 +172,14 @@ exports.deleteTask = async (req, res) => {
     }
 
     const isOwner = project.owner.equals(req.user._id);
-    const isMember = project.members.includes(req.user._id);
+    const isMember = project.members.some(
+      (member) => member._id.toString() === req.user._id.toString()
+    );
 
     if (!isOwner && !isMember) {
-      return res.status(403).json({ message: "You are not authorized to add tasks to this project" });
+      return res.status(403).json({
+        message: "You are not authorized to add tasks to this project",
+      });
     }
 
     await Comment.deleteMany({ taskId: task._id });
@@ -227,7 +239,6 @@ exports.setCompleted = async (req, res) => {
 exports.archiveTask = async (req, res) => {
   const { id } = req.params;
   try {
-    
     const updatedTask = await Task.findByIdAndUpdate(
       id,
       { archived: true, updatedAt: Date.now() },
@@ -302,7 +313,7 @@ exports.getTaskStatusDistribution = async (req, res) => {
 };
 exports.getTasksCreatedLast30Days = async (req, res) => {
   try {
-    const userId = req.user._id; 
+    const userId = req.user._id;
 
     const today = new Date();
     const startDate = new Date();
@@ -310,12 +321,13 @@ exports.getTasksCreatedLast30Days = async (req, res) => {
     startDate.setHours(0, 0, 0, 0); // Début du premier jour
     today.setHours(23, 59, 59, 999); // Fin du jour actuel
 
-
     const projects = await Project.find({ owner: userId }).select("_id");
     const projectIds = projects.map((project) => project._id);
 
     if (projectIds.length === 0) {
-      return res.status(200).json({ message: "Aucun projet trouvé", dailyStats: {} });
+      return res
+        .status(200)
+        .json({ message: "Aucun projet trouvé", dailyStats: {} });
     }
 
     const tasksByDay = await Task.aggregate([
@@ -327,13 +339,18 @@ exports.getTasksCreatedLast30Days = async (req, res) => {
       },
       {
         $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone: "UTC" } },
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$createdAt",
+              timezone: "UTC",
+            },
+          },
           count: { $sum: 1 },
         },
       },
       { $sort: { _id: 1 } }, // Trier par date croissante
     ]);
-
 
     let dailyStats = {};
     for (let i = 0; i < 30; i++) {
@@ -350,7 +367,8 @@ exports.getTasksCreatedLast30Days = async (req, res) => {
     res.status(200).json(dailyStats);
   } catch (error) {
     res.status(500).json({
-      message: "Erreur lors de la récupération des statistiques des tâches commencées",
+      message:
+        "Erreur lors de la récupération des statistiques des tâches commencées",
       error: error.message,
     });
   }
@@ -390,7 +408,9 @@ exports.getAverageCompletionTime = async (req, res) => {
       ? avgCompletionTime[0].avgTime / (1000 * 60 * 60 * 24) // Convertir en jours
       : 0;
 
-    res.status(200).json({ averageCompletionTime: `${averageCompletionTime.toFixed(2)}` });
+    res
+      .status(200)
+      .json({ averageCompletionTime: `${averageCompletionTime.toFixed(2)}` });
   } catch (error) {
     res.status(500).json({ message: "Erreur serveur", error });
   }
@@ -403,11 +423,12 @@ exports.getTotalTasksCount = async (req, res) => {
     const projects = await Project.find({ owner: userId }).select("_id");
     const projectIds = projects.map((project) => project._id);
 
-    const totalTasks = await Task.countDocuments({ project: { $in: projectIds } });
+    const totalTasks = await Task.countDocuments({
+      project: { $in: projectIds },
+    });
 
     res.status(200).json({ totalTasks });
   } catch (error) {
     res.status(500).json({ message: "Erreur serveur", error });
   }
 };
-

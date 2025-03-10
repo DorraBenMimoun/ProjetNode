@@ -1,0 +1,19 @@
+<aside class="bg-white shadow-md h-full">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold">📁 Projects</h2>
+    <a
+      routerLink="/project"
+      class="text-xl font-bold bg-gray-200 px-2 rounded-md hover:bg-gray-300"
+      >+</a
+    >
+  </div>
+  <ul class="space-y-2">
+    <li
+      class="p-2 bg-gray-100 rounded-md hover:bg-gray-300 cursor-pointer"
+      *ngFor="let project of projects"
+      (click)="selectProject(project._id!)"
+    >
+      {{ project.name }}
+    </li>
+  </ul>
+</aside>

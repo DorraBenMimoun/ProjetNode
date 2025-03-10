@@ -16,6 +16,7 @@ export class TasksComponent implements OnInit {
   tasks: Task[] = [];
   projects: any[] = [];
   newTask: Task = {
+    _id:'',
     title: '',
     description: '',
     status: 'TO_DO',
@@ -67,7 +68,7 @@ export class TasksComponent implements OnInit {
   selectProject(projectId: string) {
     console.log("📌 Projet sélectionné :", projectId);
     this.selectedProject = projectId;
-    this.filterTasks(); 
+    this.loadTasksForProject(projectId);
   }
 
   filterTasks() {
@@ -106,6 +107,7 @@ export class TasksComponent implements OnInit {
         this.taskService.refreshTasks();
         this.showAddTaskForm = false;
         this.newTask = { 
+          _id: '',
           title: '', 
           description: '',
            project: '', 

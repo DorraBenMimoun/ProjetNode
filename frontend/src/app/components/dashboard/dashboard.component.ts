@@ -17,6 +17,7 @@ export class DashboardComponent implements OnInit {
 
   selectedProject: string | null = null;
   newTask: Task = {
+    _id:'',
     title: '',
     description: '',
     status: 'TO_DO',

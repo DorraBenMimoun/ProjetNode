@@ -1,0 +1,28 @@
+<body class="h-[91vh]">
+  <div class="flex">
+    <app-project-sidebar
+      [projects]="projects"
+      (projectSelected)="onProjectSelected($event)"
+    >
+    </app-project-sidebar>
+
+    <div class="flex-1 ml-64 p-4">
+      <ng-container *ngIf="selectedProjectId; else welcome">
+        <app-task-board
+          [projectId]="selectedProjectId"
+          [projectName]="selectedProjectName"
+        ></app-task-board>
+      </ng-container>
+
+      <ng-template #welcome>
+        <div class="landing-page">
+          <h1>Welcome to Task4You!</h1>
+          <p>Select your board to start managing your tasks.</p>
+          <button routerLink="/project" class="create-project-btn">
+            Create a new board
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</body>

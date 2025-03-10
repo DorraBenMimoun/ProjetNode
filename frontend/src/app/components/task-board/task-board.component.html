@@ -1,0 +1,46 @@
+<h1 className="text-2xl font-bold">Project : {{ projectName }}</h1>
+
+<div class="task-board flex gap-4">
+  <div class="task-column" *ngFor="let status of statuses">
+    <h2 class="text-l font-bold">
+      {{ status }} ({{ taskColumns[status].length || 0 }})
+    </h2>
+
+    <div
+      cdkDropList
+      [id]="status"
+      [cdkDropListData]="taskColumns[status]"
+      [cdkDropListConnectedTo]="statuses"
+      class="task-list"
+      (cdkDropListDropped)="drop($event)"
+    >
+      <div *ngFor="let task of taskColumns[status]" cdkDrag class="task-card">
+        <div class="task-header">
+          <h4>{{ task.title }}</h4>
+          <button class="delete-btn" (click)="deleteTask(task._id)">🗑️</button>
+        </div>
+        <p>{{ task.description }}</p>
+      </div>
+
+      <div *ngIf="status === 'TO_DO'" class="add-task-form">
+        <button (click)="showAddTaskForm = !showAddTaskForm" class="add-btn">
+          + Add a card
+        </button>
+        <div *ngIf="showAddTaskForm">
+          <input
+            [(ngModel)]="newTask.title"
+            placeholder="Title"
+            class="input-field"
+          />
+          <textarea
+            [(ngModel)]="newTask.description"
+            placeholder="Description"
+            class="textarea-field"
+          ></textarea>
+
+          <button (click)="addTask()" class="add-btn">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

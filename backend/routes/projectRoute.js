@@ -1,6 +1,6 @@
 const express = require("express");
 const projectController = require("../controllers/projectController");
-const {authMiddleware} = require("../middlewares/authMiddleware");
+const { authMiddleware } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
@@ -188,7 +188,11 @@ router.post("/:id/addMember", authMiddleware, projectController.addMember);
  *       500:
  *         description: Erreur interne du serveur
  */
-router.post("/:id/removeMember", authMiddleware, projectController.removeMember);
+router.post(
+  "/:id/removeMember",
+  authMiddleware,
+  projectController.removeMember
+);
 
 /**
  * @swagger
@@ -238,7 +242,11 @@ router.post("/:id/archive", authMiddleware, projectController.archiveProject);
  *       500:
  *         description: Erreur interne du serveur
  */
-router.post("/:id/unarchive", authMiddleware, projectController.unarchiveProject);
+router.post(
+  "/:id/unarchive",
+  authMiddleware,
+  projectController.unarchiveProject
+);
 
 /**
  * @swagger
@@ -338,7 +346,11 @@ router.delete("/:id", authMiddleware, projectController.deleteProject);
  *       500:
  *         description: Erreur interne du serveur
  */
-router.get("/count/total", authMiddleware, projectController.getTotalProjectsCount);
+router.get(
+  "/count/total",
+  authMiddleware,
+  projectController.getTotalProjectsCount
+);
 
 /**
  * @swagger
@@ -362,7 +374,16 @@ router.get("/count/total", authMiddleware, projectController.getTotalProjectsCou
  *       500:
  *         description: Erreur interne du serveur
  */
-router.get("/collaborators/count", authMiddleware, projectController.getTotalCollaboratorsCount);
+router.get(
+  "/collaborators/count",
+  authMiddleware,
+  projectController.getTotalCollaboratorsCount
+);
 
+router.get(
+  "/:projectId/tasks",
+  authMiddleware,
+  projectController.getAllTasksProject
+);
 
 module.exports = router;

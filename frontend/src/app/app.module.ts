@@ -16,10 +16,13 @@ import { ProjectsComponent } from './pages/projects/projects.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProjectService } from './services/project.service';
 import { ProfileComponent } from './components/profile/profile.component';
-import { HomeComponent } from './components/home/home.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { Dashboard2Component } from './components/dashboard2/dashboard2.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TasksPageComponent } from './pages/tasks-page/tasks-page.component';
+import { ProjectSidebarComponent } from './components/project-sidebar/project-sidebar.component';
+import { TaskBoardComponent } from './components/task-board/task-board.component';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -32,8 +35,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     LandingComponent,
     ProjectsComponent,
     ProfileComponent,
-    HomeComponent,
     Dashboard2Component,
+    TasksPageComponent,
+    ProjectSidebarComponent,
+    TaskBoardComponent,
+    
     
   ],
   imports: [
@@ -44,7 +50,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ReactiveFormsModule,
     DragDropModule, 
     NgxChartsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+    positionClass: 'toast-bottom-right', // ou 'toast-top-right'
+    timeOut: 3000,
+    progressBar: true
+  }),
 
 
   ],
