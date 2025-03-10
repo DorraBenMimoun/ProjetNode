@@ -3,7 +3,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 import { ProjectService } from '../../services/project.service';
 import { Task } from '../../models/task.model';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -11,18 +11,13 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './task-board.component.html',
   styleUrls: ['./task-board.component.css']
 })
-export class TaskBoardComponent {
+export class TaskBoardComponent implements OnChanges {
   @Input() projectId!: string;
   @Input() projectName!: string;
 
-  taskColumns: { [key: string]: Task[] } = {
-    TO_DO: [],
-    DOING: [],
-    DONE: []
-  };
-
+  tasks: Task[] = [];
   newTask: Task = {
-    _id:'',
+    _id: '',
     title: '',
     description: '',
     status: 'TO_DO',
@@ -33,11 +28,15 @@ export class TaskBoardComponent {
     comments: []
   };
 
-  showAddTaskForm: boolean = false;
+  showAddTaskForm = false;
+  showArchived = false;
   statuses = ['TO_DO', 'DOING', 'DONE'];
 
-  constructor(private taskService: TaskService, private projectService: ProjectService, private toastr: ToastrService) {}
-
+  constructor(
+    private taskService: TaskService,
+    private projectService: ProjectService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnChanges() {
     this.loadTasks();
@@ -46,14 +45,10 @@ export class TaskBoardComponent {
   loadTasks() {
     this.projectService.getTasksByProjectId(this.projectId).subscribe({
       next: (tasks) => {
-        this.taskColumns = {
-          TO_DO: tasks.filter(t => t.status === 'TO_DO'),
-          DOING: tasks.filter(t => t.status === 'DOING'),
-          DONE: tasks.filter(t => t.status === 'DONE')
-        };
+        this.tasks = tasks;
       },
       error: (err) => {
-        console.error("Erreur tâches", err);
+        console.error('Erreur tâches', err);
         this.toastr.error('Erreur lors de la récupération des tâches', 'Erreur');
       }
     });
@@ -65,17 +60,42 @@ export class TaskBoardComponent {
     const taskToSend = { ...this.newTask, projectId: this.projectId };
     this.taskService.createTask(taskToSend).subscribe({
       next: (data) => {
-        console.log("Task recuperee : ", data.task);
-        this.taskColumns['TO_DO'].push(data.task);
+        this.tasks.push(data.task);
         this.showAddTaskForm = false;
         this.newTask.title = '';
         this.newTask.description = '';
         this.toastr.success('Tâche ajoutée avec succès', 'Succès');
-
       },
       error: (err) => {
-        console.error("Erreur ajout tâche", err);
+        console.error('Erreur ajout tâche', err);
         this.toastr.error('Erreur lors de l’ajout de la tâche', 'Erreur');
+      }
+    });
+  }
+
+  archiveTask(task: Task): void {
+    this.taskService.archiveTask(task._id).subscribe({
+      next: () => {
+        task.archived = true;
+        this.toastr.success('Tâche archivée avec succès', 'Succès');
+      },
+      error: (err) => {
+        console.error('Erreur archivage tâche', err);
+        this.toastr.error('Erreur lors de l’archivage de la tâche', 'Erreur');
+      }
+    });
+  }
+
+  restoreTask(id: string): void {
+    this.taskService.unarchiveTask(id).subscribe({
+      next: () => {
+        const task = this.tasks.find(t => t._id === id);
+        if (task) task.archived = false;
+        this.toastr.success('Tâche restaurée avec succès', 'Succès');
+      },
+      error: (err) => {
+        console.error('Erreur restauration tâche', err);
+        this.toastr.error('Erreur lors de la restauration de la tâche', 'Erreur');
       }
     });
   }
@@ -83,37 +103,37 @@ export class TaskBoardComponent {
   deleteTask(id: string): void {
     this.taskService.deleteTask(id).subscribe({
       next: () => {
-        this.taskColumns = {
-          TO_DO: this.taskColumns['TO_DO'].filter(t => t._id !== id),
-          DOING: this.taskColumns['DOING'].filter(t => t._id !== id),
-          DONE: this.taskColumns['DONE'].filter(t => t._id !== id)
-        };
-
+        this.tasks = this.tasks.filter(t => t._id !== id);
         this.toastr.success('Tâche supprimée avec succès', 'Succès');
-  
       },
-      error: (error) => {
-        console.error('Erreur lors de la suppression de la tâche', error);
+      error: (err) => {
+        console.error('Erreur suppression tâche', err);
         this.toastr.error('Erreur lors de la suppression de la tâche', 'Erreur');
       }
     });
   }
 
-  drop(event: CdkDragDrop<Task[]>) {
+  drop(event: CdkDragDrop<Task[]>, status: string) {
     const task = event.previousContainer.data[event.previousIndex];
-    const newStatus = event.container.id as Task['status'];
-
-    transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+    const newStatus = status as Task['status'];
 
     this.taskService.updateTask(task._id!, { status: newStatus }).subscribe({
       next: () => {
+        task.status = newStatus;
         this.toastr.success('Statut de la tâche mis à jour', 'Succès');
       },
       error: (err) => {
-        console.error("Erreur maj statut", err);
+        console.error('Erreur maj statut', err);
         this.toastr.error('Erreur lors de la mise à jour du statut de la tâche', 'Erreur');
-        transferArrayItem(event.container.data, event.previousContainer.data, event.currentIndex, event.previousIndex);
       }
     });
+  }
+
+  getTasksByStatus(status: string): Task[] {
+    return this.tasks.filter(task => task.status === status && !task.archived);
+  }
+
+  getArchivedTasks(): Task[] {
+    return this.tasks.filter(task => task.archived);
   }
 }

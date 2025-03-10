@@ -237,3 +237,49 @@ aside li:hover {
 .create-project-btn:hover {
   background-color: #b31d66;
 }
+.trash-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #ff5050;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  transition: background 0.3s;
+}
+.trash-fab:hover {
+  background: #e64545;
+}
+
+.trash-container {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  padding: 16px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.archived-task {
+  border-bottom: 1px solid #ddd;
+  padding: 8px 0;
+}
+.archived-task .actions {
+  float: right;
+}
+.archived-task .actions button {
+  margin-left: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}

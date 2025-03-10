@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { TasksComponent } from './components/tasks/tasks.component';
 import { UserComponent } from './components/user/user.component';
 import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -28,7 +27,6 @@ import { ToastrModule } from 'ngx-toastr';
   declarations: [
     AppComponent,
     DashboardComponent,
-    TasksComponent,
     UserComponent,
     ProjetComponent,
     NavbarComponent,

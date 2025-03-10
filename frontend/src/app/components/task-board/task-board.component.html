@@ -1,23 +1,27 @@
-<h1 className="text-2xl font-bold">Project : {{ projectName }}</h1>
+<h1 class="text-2xl font-bold">Project : {{ projectName }}</h1>
 
 <div class="task-board flex gap-4">
   <div class="task-column" *ngFor="let status of statuses">
     <h2 class="text-l font-bold">
-      {{ status }} ({{ taskColumns[status].length || 0 }})
+      {{ status }} ({{ getTasksByStatus(status).length }})
     </h2>
 
     <div
       cdkDropList
       [id]="status"
-      [cdkDropListData]="taskColumns[status]"
+      [cdkDropListData]="getTasksByStatus(status)"
       [cdkDropListConnectedTo]="statuses"
       class="task-list"
-      (cdkDropListDropped)="drop($event)"
+      (cdkDropListDropped)="drop($event, status)"
     >
-      <div *ngFor="let task of taskColumns[status]" cdkDrag class="task-card">
+      <div
+        *ngFor="let task of getTasksByStatus(status)"
+        cdkDrag
+        class="task-card"
+      >
         <div class="task-header">
           <h4>{{ task.title }}</h4>
-          <button class="delete-btn" (click)="deleteTask(task._id)">🗑️</button>
+          <button class="delete-btn" (click)="archiveTask(task)">🗑️</button>
         </div>
         <p>{{ task.description }}</p>
       </div>
@@ -42,5 +46,24 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Poubelle flottante -->
+<div class="trash-fab" (click)="showArchived = !showArchived">
+  🗑️ {{ showArchived ? "Fermer" : "Poubelle" }}
+</div>
+
+<div class="trash-container" *ngIf="showArchived">
+  <h3>Tâches archivées ({{ getArchivedTasks().length }})</h3>
+  <div *ngFor="let task of getArchivedTasks()" class="archived-task">
+    <div class="task-header">
+      <h4>{{ task.title }}</h4>
+      <div class="actions">
+        <button (click)="restoreTask(task._id)">🔁</button>
+        <button (click)="deleteTask(task._id)">❌</button>
+      </div>
+    </div>
+    <p>{{ task.description }}</p>
   </div>
 </div>

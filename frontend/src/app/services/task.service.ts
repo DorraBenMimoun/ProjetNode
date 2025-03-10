@@ -41,11 +41,11 @@ export class TaskService {
     return this.http.put<Task>(`${this.apiUrl}/${id}/completed`, {});
   }
   archiveTask(id: string): Observable<Task> {
-    return this.http.patch<Task>(`${this.apiUrl}/${id}/archived`, {});
+    return this.http.post<Task>(`${this.apiUrl}/${id}/archive`, {});
   }
   
   unarchiveTask(id: string): Observable<Task> {
-    return this.http.patch<Task>(`${this.apiUrl}/${id}/unarchived`, {});
+    return this.http.post<Task>(`${this.apiUrl}/${id}/unarchive`, {});
   }
   updateTaskStatus(id: string, newStatus: string): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}/status`, { status: newStatus });
