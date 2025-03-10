@@ -1,0 +1,134 @@
+<div
+  class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-999 p-4"
+>
+  <div
+    class="bg-white rounded-2xl p-6 w-full max-w-3xl shadow-xl relative border border-gray-200"
+  >
+    <!-- Bouton de fermeture -->
+    <button
+      (click)="onClose()"
+      class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition"
+      aria-label="Fermer"
+    >
+      ✖
+    </button>
+
+    <!-- En-tête -->
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">{{ task.title }}</h2>
+    <p class="text-gray-600 mb-6 leading-relaxed">{{ task.description }}</p>
+
+    <!-- Infos -->
+    <div
+      class="bg-gray-50 p-4 rounded-lg mb-6 border flex flex-wrap gap-4 text-sm text-gray-700"
+    >
+      <div>
+        <strong>Statut :</strong>
+        <span
+          [ngClass]="{
+            'text-red-500': task.status === 'TO_DO',
+            'text-yellow-500': task.status === 'DOING',
+            'text-green-500': task.status === 'DONE'
+          }"
+          >{{ task.status }}</span
+        >
+      </div>
+      <div>
+        <strong>Créée le :</strong>
+        {{ task.createdAt | date : "dd/MM/yyyy HH:mm" }}
+      </div>
+      <div>
+        <strong>Par :</strong>
+        {{ task.createdBy?.username || "Utilisateur inconnu" }}
+      </div>
+      <div *ngIf="task.dateDebut">
+        <strong>Début :</strong> {{ task.dateDebut | date : "dd/MM/yyyy" }}
+      </div>
+      <div *ngIf="task.dateTerminee">
+        <strong>Fin :</strong> {{ task.dateTerminee | date : "dd/MM/yyyy" }}
+      </div>
+    </div>
+
+    <!-- Checklist -->
+    <div *ngIf="task.checklist?.length" class="mb-6">
+      <h3 class="font-semibold text-gray-800 mb-3">✅ Checklist :</h3>
+      <ul class="space-y-2">
+        <li *ngFor="let item of task.checklist" class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            [checked]="item.done"
+            disabled
+            class="h-5 w-5 text-green-500 border-gray-300 rounded"
+          />
+          <span [class.line-through]="item.done" class="text-gray-700">{{
+            item.title
+          }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Commentaires -->
+    <div class="mb-6">
+      <h3 class="font-semibold text-gray-800 mb-3">💬 Commentaires :</h3>
+      <div
+        *ngIf="comments?.length; else noComments"
+        class="space-y-4 max-h-56 overflow-y-auto pr-2"
+      >
+        <div
+          *ngFor="let comment of comments"
+          class="bg-gray-100 p-4 rounded-lg border border-gray-200 flex items-start gap-4 relative"
+        >
+          <img
+            [src]="
+              'https://ui-avatars.com/api/?name=' +
+              comment.userId.username.replace(' ', '+')
+            "
+            class="w-10 h-10 rounded-full object-cover"
+            [title]="'Par: ' + comment.userId.username"
+            alt="User avatar"
+          />
+          <div class="flex-1">
+            <div class="flex justify-between items-center mb-1">
+              <div class="text-sm font-medium text-gray-800">
+                {{ comment.userId.username }}
+              </div>
+              <div class="text-xs text-gray-400 mr-4">
+                {{ comment.createdAt | date : "dd/MM/yyyy HH:mm" }}
+              </div>
+            </div>
+            <p class="text-gray-700 text-sm leading-relaxed">
+              {{ comment.text }}
+            </p>
+          </div>
+          <!-- Bouton supprimer -->
+          <button
+            *ngIf="comment.userId._id === this.userId"
+            (click)="deleteComment(comment._id)"
+            class="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition"
+            title="Supprimer le commentaire"
+          >
+            🗑️
+          </button>
+        </div>
+      </div>
+      <ng-template #noComments>
+        <p class="text-gray-500 italic">Aucun commentaire pour le moment.</p>
+      </ng-template>
+    </div>
+
+    <!-- Ajouter un commentaire -->
+    <textarea
+      [(ngModel)]="newComment"
+      placeholder="Ajouter un commentaire..."
+      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4"
+      rows="1"
+    ></textarea>
+
+    <!-- Bouton Ajouter -->
+    <button
+      (click)="addComment()"
+      class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg w-full font-semibold shadow-md transition"
+    >
+      ➕ Ajouter un commentaire
+    </button>
+  </div>
+</div>

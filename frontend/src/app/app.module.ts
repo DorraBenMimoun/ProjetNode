@@ -23,6 +23,7 @@ import { ProjectSidebarComponent } from './components/project-sidebar/project-si
 import { TaskBoardComponent } from './components/task-board/task-board.component';
 import { ToastrModule } from 'ngx-toastr';
 import { TestSocketComponent } from './test-socket/test-socket.component';
+import { TaskModalComponent } from './components/task-modal/task-modal.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { TestSocketComponent } from './test-socket/test-socket.component';
     ProjectSidebarComponent,
     TaskBoardComponent,
     TestSocketComponent,
+    TaskModalComponent,
     
     
   ],

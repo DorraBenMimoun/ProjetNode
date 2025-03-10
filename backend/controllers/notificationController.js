@@ -1,5 +1,5 @@
 const Notification = require("../models/notificationModel");
-const { getConnectedSocketByUserId } = require("../Sockets/UserSockets");
+const { getConnectedSocketByUserId } = require("../Sockets/UserSocket");
 const { io } = require("../index");
 
 const getNotifications = async (req, res) => {

@@ -21,9 +21,15 @@
       >
         <div class="task-header">
           <h4 class="text-left">{{ task.title }}</h4>
-          <button class="delete-btn" (click)="archiveTask(task)">🗑️</button>
+
+          <div class="flex flex-row gap-2">
+            <button class="edit-btn" (click)="openTaskModal(task)">💬</button>
+
+            <button class="delete-btn" (click)="archiveTask(task)">🗑️</button>
+          </div>
         </div>
         <p class="text-left">{{ task.description }}</p>
+
         <div
           *ngIf="task.doneBy && status != 'TO_DO'"
           class="text-left flex items-center gap-2 mt-2"
@@ -81,3 +87,9 @@
     <p>{{ task.description }}</p>
   </div>
 </div>
+
+<app-task-modal
+  *ngIf="showTaskModal"
+  [task]="selectedTask"
+  (close)="closeTaskModal()"
+></app-task-modal>

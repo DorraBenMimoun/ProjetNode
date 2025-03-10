@@ -64,10 +64,16 @@ const updateLiveProject = async (projectId, message, emetter) => {
       // Get the updated Project
       const updatedProject = await Project.findById(projectId).populate({
         path: "tasks",
-        populate: {
-          path: "doneBy",
-          select: "username", // Only get the username field
-        },
+        populate: [
+          {
+            path: "doneBy",
+            select: "username",
+          },
+          {
+            path: "createdBy",
+            select: "username",
+          },
+        ],
       });
 
       // Emit the updated project to all users

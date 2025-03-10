@@ -186,9 +186,9 @@ h2 {
 aside {
     position: fixed;
     left: 0;
-    top: 60px; /* Ajuster selon la hauteur de ta navbar */
+    top: 16vh; /* Ajuster selon la hauteur de ta navbar */
     width: 270px;
-    height: calc(100vh - 60px); /* Ajuster la hauteur pour qu'elle ne dépasse pas la hauteur de l'écran */
+    height: calc(70vh); /* Ajuster la hauteur pour qu'elle ne dépasse pas la hauteur de l'écran */
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
     box-shadow: 0px 4px 10px rgba(109, 43, 104, 0.15);

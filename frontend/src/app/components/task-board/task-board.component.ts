@@ -162,4 +162,22 @@ export class TaskBoardComponent implements OnChanges {
   getArchivedTasks(): Task[] {
     return this.tasks.filter(task => task.archived);
   }
+
+
+  selectedTask?: Task; // ou null si tu préfères
+  showTaskModal: boolean = false;
+
+  
+  openTaskModal(task: Task) {
+    this.selectedTask = task;
+    this.showTaskModal = true;
+  }
+  
+  closeTaskModal() {
+    this.showTaskModal = false;
+    this.selectedTask = undefined;
+  }
+  
+ 
+  
 }
