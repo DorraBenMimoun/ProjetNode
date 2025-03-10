@@ -11,7 +11,6 @@ import { authInterceptor } from './interceptors/auth.interceptor';
 import { ProjetComponent } from './projet/projet.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { LandingComponent } from './components/landing/landing.component';
-import { ProjectsComponent } from './pages/projects/projects.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProjectService } from './services/project.service';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -33,7 +32,6 @@ import { TaskModalComponent } from './components/task-modal/task-modal.component
     ProjetComponent,
     NavbarComponent,
     LandingComponent,
-    ProjectsComponent,
     ProfileComponent,
     Dashboard2Component,
     TasksPageComponent,
