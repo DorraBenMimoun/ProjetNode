@@ -8,6 +8,7 @@ import { LandingComponent } from './components/landing/landing.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { Dashboard2Component } from './components/dashboard2/dashboard2.component';
 import { TasksPageComponent } from './pages/tasks-page/tasks-page.component';
+import { TestSocketComponent } from './test-socket/test-socket.component';
 
 const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent},
   { path: 'dashboard2', component: Dashboard2Component},
   { path: 'dashboard/project', component: ProjetComponent},
+  { path:'socket', component: TestSocketComponent},
 
 
 

@@ -3,8 +3,10 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 import { ProjectService } from '../../services/project.service';
 import { Task } from '../../models/task.model';
+import { SocketService } from '../../services/socket.service';
 import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-task-board',
@@ -35,11 +37,32 @@ export class TaskBoardComponent implements OnChanges {
   constructor(
     private taskService: TaskService,
     private projectService: ProjectService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private socketService: SocketService
   ) {}
+
+  private subs: Subscription[] = [];
+
+  private userId = localStorage.getItem('userId');
+
 
   ngOnChanges() {
     this.loadTasks();
+    this.socketService.connect();
+    this.socketService.consultProject(this.projectId); // 👈 Envoie le consult-project
+    this.subs.push(
+      this.socketService.onUpdateProject().subscribe((infos ) => {
+        console.log('Mise à jour du projet:', infos.updatedProject);
+        // Set the tasks to the updated project's tasks
+        this.tasks = infos.updatedProject.tasks;
+
+        console.log("User ID:", this.userId);
+        console.log("Emetter:", infos.emetter);
+        
+        // Show a toast message
+        if(infos.message && this.userId && this.userId.toString() != infos.emetter.toString()) this.toastr.info(infos.message, 'Mise à jour du projet');
+      })
+    )
   }
 
   loadTasks() {
@@ -116,15 +139,18 @@ export class TaskBoardComponent implements OnChanges {
   drop(event: CdkDragDrop<Task[]>, status: string) {
     const task = event.previousContainer.data[event.previousIndex];
     const newStatus = status as Task['status'];
+    task.status = newStatus;
+    const old_status = task.status;
+
 
     this.taskService.updateTask(task._id!, { status: newStatus }).subscribe({
       next: () => {
-        task.status = newStatus;
         this.toastr.success('Statut de la tâche mis à jour', 'Succès');
       },
       error: (err) => {
         console.error('Erreur maj statut', err);
         this.toastr.error('Erreur lors de la mise à jour du statut de la tâche', 'Erreur');
+        task.status = old_status; // On remet l'ancien statut en cas d'erreur
       }
     });
   }

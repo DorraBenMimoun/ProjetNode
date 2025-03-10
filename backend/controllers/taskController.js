@@ -2,6 +2,8 @@ const Task = require("../models/taskModel");
 const Project = require("../models/projectModel");
 const Comment = require("../models/CommentModel");
 
+const { updateLiveProject } = require("../Sockets/ProjectSocket");
+
 exports.getAllTasksUser = async (req, res) => {
   try {
     const tasks = await Task.find({ createdBy: req.user._id });
@@ -62,6 +64,11 @@ exports.createTask = async (req, res) => {
       $push: { tasks: newTask._id },
     });
 
+    await updateLiveProject(
+      projectId,
+      `${req.user.username} added a new task`,
+      req.user._id
+    );
     res.status(201).json({
       message: "Task created successfully.",
       task: newTask,
@@ -137,14 +144,31 @@ exports.updateTask = async (req, res) => {
     if (req.body.status) {
       task.status = req.body.status;
 
+      if (req.body.status === "TO_DO") {
+        task.dateDebut = null;
+        task.dateTerminee = null;
+      } else {
+        task.doneBy = req.user._id;
+      }
+
       if (req.body.status === "DOING") {
         task.dateDebut = Date.now();
+        task.dateTerminee = null;
       } else if (req.body.status === "DONE") {
         task.dateTerminee = Date.now();
+        if (!task.dateDebut) {
+          task.dateDebut = Date.now();
+        }
       }
     }
 
     await task.save();
+
+    await updateLiveProject(
+      task.project,
+      `${req.user.username} updated a task`,
+      req.user._id
+    );
 
     res.status(200).json({
       message: "Task updated successfully",
@@ -185,54 +209,15 @@ exports.deleteTask = async (req, res) => {
     await Comment.deleteMany({ taskId: task._id });
     await task.deleteOne();
 
+    await updateLiveProject(
+      project._id,
+      `${req.user.username} deleted a task`,
+      req.user._id
+    );
+
     res.status(200).json({ message: "Task deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
-
-exports.setInProgress = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const updatedTask = await Task.findByIdAndUpdate(
-      id,
-      {
-        status: "DOING",
-        updatedAt: Date.now(),
-        dateDebut: Date.now(),
-        doneBy: req.user._id,
-      },
-      { new: true }
-    );
-    if (!updatedTask) {
-      return res.status(404).json({ message: "Tâche non trouvée" });
-    }
-    res.status(200).json(updatedTask);
-  } catch (err) {
-    res.status(500).json({
-      message: "Erreur lors de la mise à jour de la tâche",
-      error: err,
-    });
-  }
-};
-
-exports.setCompleted = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const updatedTask = await Task.findByIdAndUpdate(
-      id,
-      { status: "DONE", updatedAt: Date.now(), dateTerminee: Date.now() },
-      { new: true }
-    );
-    if (!updatedTask) {
-      return res.status(404).json({ message: "Tâche non trouvée" });
-    }
-    res.status(200).json(updatedTask);
-  } catch (err) {
-    res.status(500).json({
-      message: "Erreur lors de la mise à jour de la tâche",
-      error: err,
-    });
   }
 };
 
@@ -247,6 +232,13 @@ exports.archiveTask = async (req, res) => {
     if (!updatedTask) {
       return res.status(404).json({ message: "Tâche non trouvée" });
     }
+
+    await updateLiveProject(
+      updatedTask.project,
+      `${req.user.username} archived a task`,
+      req.user._id
+    );
+
     res.status(200).json(updatedTask);
   } catch (err) {
     res.status(500).json({
@@ -267,6 +259,13 @@ exports.unarchiveTask = async (req, res) => {
     if (!updatedTask) {
       return res.status(404).json({ message: "Tâche non trouvée" });
     }
+
+    await updateLiveProject(
+      updatedTask.project,
+      `${req.user.username} restored a task`,
+      req.user._id
+    );
+
     res.status(200).json(updatedTask);
   } catch (err) {
     res.status(500).json({

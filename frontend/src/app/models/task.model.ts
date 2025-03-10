@@ -7,7 +7,7 @@ export interface Task {
     dateDebut?: Date;
     dateTerminee?: Date;
     createdBy: string; // ID de l'utilisateur qui a créé la tâche
-    doneBy?: string; // ID de l'utilisateur qui a terminé la tâche
+    doneBy?: any;
     archived: boolean;
     project: string; // ID du projet auquel appartient la tâche
     comments?: Comment[];

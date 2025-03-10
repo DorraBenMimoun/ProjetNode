@@ -22,6 +22,7 @@ import { TasksPageComponent } from './pages/tasks-page/tasks-page.component';
 import { ProjectSidebarComponent } from './components/project-sidebar/project-sidebar.component';
 import { TaskBoardComponent } from './components/task-board/task-board.component';
 import { ToastrModule } from 'ngx-toastr';
+import { TestSocketComponent } from './test-socket/test-socket.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { ToastrModule } from 'ngx-toastr';
     TasksPageComponent,
     ProjectSidebarComponent,
     TaskBoardComponent,
+    TestSocketComponent,
     
     
   ],

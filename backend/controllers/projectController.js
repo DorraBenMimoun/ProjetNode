@@ -151,7 +151,7 @@ exports.getAllTasksProject = async (req, res) => {
       return res.status(400).json({ message: "Project ID is required" });
     }
 
-    const tasks = await Task.find({ project: projectId });
+    const tasks = await Task.find({ project: projectId }).populate("doneBy");
 
     return res.status(200).json(tasks);
   } catch (error) {

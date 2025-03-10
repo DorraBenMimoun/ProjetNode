@@ -50,12 +50,12 @@ export class UserComponent {
         console.log('Connexion réussie :', res);
         if (res.token) {
           console.log('Connexion réussie :', res);
-          this.authService.saveToken(res.token);  
+          this.authService.saveToken(res.token, res.user.id);  
           this.loginErrorMessage = '';  
           this.loginSuccessMessage = 'Connexion réussie ! Redirection...';
   
           // Redirection vers le dashboard
-          this.router.navigate(['/task']);
+          this.router.navigate(['/tasks']);
         }
       },
       error: (err) => {

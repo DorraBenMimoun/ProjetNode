@@ -23,11 +23,14 @@ export class AuthService {
 
   }
 
-  saveToken(token: string): void {
+  saveToken(token: string, userId:string): void {
     this.isLoggedInSubject.next(true);  // Émet que l'utilisateur est maintenant connecté
 
     localStorage.setItem('token', token);
+    localStorage.setItem('userId', userId);
   }
+
+
 
   getToken(): string | null {
     return localStorage.getItem('token');
@@ -35,6 +38,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('userId')
     this.isLoggedInSubject.next(false);  // Émet que l'utilisateur est maintenant déconnecté
 
   }

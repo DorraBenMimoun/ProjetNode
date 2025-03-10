@@ -20,30 +20,44 @@
         class="task-card"
       >
         <div class="task-header">
-          <h4>{{ task.title }}</h4>
+          <h4 class="text-left">{{ task.title }}</h4>
           <button class="delete-btn" (click)="archiveTask(task)">🗑️</button>
         </div>
-        <p>{{ task.description }}</p>
-      </div>
-
-      <div *ngIf="status === 'TO_DO'" class="add-task-form">
-        <button (click)="showAddTaskForm = !showAddTaskForm" class="add-btn">
-          + Add a card
-        </button>
-        <div *ngIf="showAddTaskForm">
-          <input
-            [(ngModel)]="newTask.title"
-            placeholder="Title"
-            class="input-field"
+        <p class="text-left">{{ task.description }}</p>
+        <div
+          *ngIf="task.doneBy && status != 'TO_DO'"
+          class="text-left flex items-center gap-2 mt-2"
+        >
+          <img
+            [src]="
+              'https://ui-avatars.com/api/?name=' +
+              task.doneBy.username.replace(' ', '+')
+            "
+            class="w-8 h-8 rounded-full"
+            [title]="'Done by: ' + task.doneBy.username"
+            alt="User avatar"
           />
-          <textarea
-            [(ngModel)]="newTask.description"
-            placeholder="Description"
-            class="textarea-field"
-          ></textarea>
-
-          <button (click)="addTask()" class="add-btn">Add</button>
+          <span class="text-sm text-gray-600">{{ task.doneBy.username }}</span>
         </div>
+      </div>
+    </div>
+    <div *ngIf="status === 'TO_DO'" class="add-task-form">
+      <button (click)="showAddTaskForm = !showAddTaskForm" class="add-btn">
+        + Add a card
+      </button>
+      <div *ngIf="showAddTaskForm">
+        <input
+          [(ngModel)]="newTask.title"
+          placeholder="Title"
+          class="input-field"
+        />
+        <textarea
+          [(ngModel)]="newTask.description"
+          placeholder="Description"
+          class="textarea-field"
+        ></textarea>
+
+        <button (click)="addTask()" class="add-btn">Add</button>
       </div>
     </div>
   </div>
@@ -51,7 +65,7 @@
 
 <!-- Poubelle flottante -->
 <div class="trash-fab" (click)="showArchived = !showArchived">
-  🗑️ {{ showArchived ? "Fermer" : "Poubelle" }}
+  😶‍🌫️ {{ showArchived ? "Fermer" : "Tâches archivées" }}
 </div>
 
 <div class="trash-container" *ngIf="showArchived">
@@ -59,7 +73,7 @@
   <div *ngFor="let task of getArchivedTasks()" class="archived-task">
     <div class="task-header">
       <h4>{{ task.title }}</h4>
-      <div class="actions">
+      <div class="actions min-w-16">
         <button (click)="restoreTask(task._id)">🔁</button>
         <button (click)="deleteTask(task._id)">❌</button>
       </div>

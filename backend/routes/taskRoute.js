@@ -106,7 +106,7 @@ const router = express.Router();
  *           type: string
  *           enum: [TO_DO, DOING, DONE]
  *           default: DOING
- *           
+ *
  */
 
 /**
@@ -215,56 +215,6 @@ router.get("/:id", authMiddleware, taskController.getTaskById);
  */
 router.put("/:id", authMiddleware, taskController.updateTask);
 
-/**
- * @swagger
- * /tasks/{id}/inProgress:
- *   put:
- *     summary: Mettre une tâche en statut "en cours"
- *     tags: [Tasks]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID de la tâche à mettre en cours
- *     responses:
- *       200:
- *         description: Tâche mise à jour à "en cours"
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Task'
- */
-router.put("/:id/inProgress", authMiddleware, taskController.setInProgress);
-
-/**
- * @swagger
- * /tasks/{id}/completed:
- *   put:
- *     summary: Mettre une tâche en statut "terminé"
- *     tags: [Tasks]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID de la tâche à mettre en statut "terminé"
- *     responses:
- *       200:
- *         description: Tâche mise à jour à "terminé"
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Task'
- */
-router.put("/:id/completed", authMiddleware, taskController.setCompleted);
-
 // Archieve task needed
 
 /**
@@ -287,7 +237,6 @@ router.put("/:id/completed", authMiddleware, taskController.setCompleted);
  *         description: Tâche supprimée
  */
 router.delete("/:id", authMiddleware, taskController.deleteTask);
-
 
 /**
  * @swagger
@@ -396,7 +345,11 @@ router.get("/archived/:id", authMiddleware, taskController.getArchivedTasks);
  *       500:
  *         description: Erreur serveur
  */
-router.get("/status/Distribution", authMiddleware, taskController.getTaskStatusDistribution);
+router.get(
+  "/status/Distribution",
+  authMiddleware,
+  taskController.getTaskStatusDistribution
+);
 
 /**
  * @swagger
@@ -426,7 +379,11 @@ router.get("/status/Distribution", authMiddleware, taskController.getTaskStatusD
  *       500:
  *         description: Erreur serveur
  */
-router.get("/creation/evolution", authMiddleware, taskController.getTasksCreatedLast30Days);
+router.get(
+  "/creation/evolution",
+  authMiddleware,
+  taskController.getTasksCreatedLast30Days
+);
 
 /**
  * @swagger
@@ -451,7 +408,11 @@ router.get("/creation/evolution", authMiddleware, taskController.getTasksCreated
  *       500:
  *         description: Erreur serveur
  */
-router.get("/completion/average", authMiddleware, taskController.getAverageCompletionTime);
+router.get(
+  "/completion/average",
+  authMiddleware,
+  taskController.getAverageCompletionTime
+);
 
 /**
  * @swagger
