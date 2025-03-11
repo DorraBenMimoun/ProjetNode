@@ -2,6 +2,7 @@ import { ProjectService } from './../../services/project.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
 import { forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard2',
@@ -18,7 +19,7 @@ export class Dashboard2Component implements OnInit {
   totalCollaborators = 0; 
   listProjects: any[] = [];
 
-  constructor(private dashboardService: DashboardService,private cdr: ChangeDetectorRef,private projectService:ProjectService) {}
+  constructor(private dashboardService: DashboardService,private cdr: ChangeDetectorRef,private projectService:ProjectService, private router:Router) {}
   
   ngOnInit() {
     this.fetchTaskStatus();
@@ -100,6 +101,10 @@ export class Dashboard2Component implements OnInit {
       console.error("Erreur récupération CompletionTime", error);
       this.avgCompletionTime = "Non disponible";
     });
+  }
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
   }
   
  

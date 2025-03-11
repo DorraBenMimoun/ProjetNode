@@ -23,8 +23,10 @@ body {
 }
 
 h2 {
-    color: #5d83ff;
+    color: #700c46;
     margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 2rem;
 }
 
 label {
@@ -45,7 +47,7 @@ input {
 button {
     width: 80%;
     padding: 10px;
-    background: #7f9cff;
+    background: #21793a;
     color: white;
     font-size: 1em;
     font-weight: bold;
@@ -56,15 +58,15 @@ button {
 }
 
 button:hover {
-    background: #6d8efb;
+    background: #4db37c;
 }
 
 .delete-btn {
-    background: #ff6b6b;
+    background: #842b2b;
 }
 
 .delete-btn:hover {
-    background: #ff4949;
+    background: #b65656;
 }
 
 .success {

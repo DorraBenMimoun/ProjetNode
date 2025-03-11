@@ -241,7 +241,7 @@ aside li:hover {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: #ff5050;
+  background: #c12f2f;
   color: white;
   padding: 12px 16px;
   border-radius: 50px;
@@ -269,7 +269,11 @@ aside li:hover {
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
-
+.project-name{
+  color: #700c46;
+  font-weight: bold;
+  font-size: 1.9rem;
+}
 .archived-task {
   border-bottom: 1px solid #ddd;
   padding: 8px 0;

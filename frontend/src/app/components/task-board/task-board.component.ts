@@ -33,6 +33,11 @@ export class TaskBoardComponent implements OnChanges {
   showAddTaskForm = false;
   showArchived = false;
   statuses = ['TO_DO', 'DOING', 'DONE'];
+  selectedTask?: Task; // ou null si tu préfères
+  showTaskModal: boolean = false;
+
+  private subs: Subscription[] = [];
+  private userId = localStorage.getItem('userId');
 
   constructor(
     private taskService: TaskService,
@@ -41,15 +46,11 @@ export class TaskBoardComponent implements OnChanges {
     private socketService: SocketService
   ) {}
 
-  private subs: Subscription[] = [];
-
-  private userId = localStorage.getItem('userId');
-
 
   ngOnChanges() {
     this.loadTasks();
     this.socketService.connect();
-    this.socketService.consultProject(this.projectId); // 👈 Envoie le consult-project
+    this.socketService.consultProject(this.projectId); 
     this.subs.push(
       this.socketService.onUpdateProject().subscribe((infos ) => {
         console.log('Mise à jour du projet:', infos.updatedProject);
@@ -161,13 +162,7 @@ export class TaskBoardComponent implements OnChanges {
 
   getArchivedTasks(): Task[] {
     return this.tasks.filter(task => task.archived);
-  }
-
-
-  selectedTask?: Task; // ou null si tu préfères
-  showTaskModal: boolean = false;
-
-  
+  }  
   openTaskModal(task: Task) {
     this.selectedTask = task;
     this.showTaskModal = true;

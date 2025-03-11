@@ -7,7 +7,7 @@
     (ngSubmit)="addProject()"
     class="project-form"
   >
-    <input formControlName="name" placeholder="Nom du projet" required />
+    <input formControlName="name" placeholder="Project name" required />
     <textarea
       formControlName="description"
       placeholder="Description"
@@ -89,7 +89,7 @@
           <div class="add-member-container">
             <input
               [(ngModel)]="newMemberEmail[project._id]"
-              placeholder="Email du membre"
+              placeholder="Member's email"
             />
             <p
               *ngIf="addMemberErrorMessage"

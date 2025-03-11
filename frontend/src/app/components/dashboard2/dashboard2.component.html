@@ -2,15 +2,15 @@
   
     <!-- KPIs -->
     <div class="stats">
-        <div class="stat-card">
+        <div class="stat-card" (click)="navigateTo('/project')">
           <h3>📌 Projects</h3>
           <p *ngIf="totalProjects !== null && totalProjects !== undefined; else loading"> {{ totalProjects }} </p>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" (click)="navigateTo('/tasks')">
           <h3>✅ Tasks</h3>
           <p *ngIf="totalTasks !== null && totalTasks !== undefined; else loading"> {{ totalTasks }} </p>
         </div>
-        <div class="stat-card">
+        <div class="stat-card"  (click)="navigateTo('/project')">
           <h3>👥 Collaborators</h3>
           <p *ngIf="totalCollaborators !== null && totalCollaborators !== undefined; else loading"> {{ totalCollaborators }} </p>
         </div>

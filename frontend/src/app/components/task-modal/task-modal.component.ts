@@ -9,13 +9,13 @@ import { orderBy } from 'lodash';
   selector: 'app-task-modal',
   templateUrl: './task-modal.component.html'
 })
-export class TaskModalComponent implements OnInit {  // 🔶 Implémenter OnInit
+export class TaskModalComponent implements OnInit { 
   @Input() task!: any;
   @Output() close = new EventEmitter<void>();
 
 
   newComment: string = '';
-  comments: any[] = [];  // 🔶 Stocker les commentaires ici
+  comments: any[] = [];  
 
   constructor(private commentService: CommentService,
         private toastr: ToastrService
@@ -25,12 +25,12 @@ export class TaskModalComponent implements OnInit {  // 🔶 Implémenter OnInit
    userId = localStorage.getItem('userId');
 
 
-  // 🔶 Appelé à l'ouverture de la modal
+ 
   ngOnInit(): void {
-    this.loadComments();  // Charger les commentaires
+    this.loadComments();  
   }
 
-  // 🔶 Fonction pour charger les commentaires de la tâche
+ 
   loadComments() {
     this.commentService.getCommentsByTask(this.task._id).subscribe({
       next: (data) => {
@@ -63,11 +63,9 @@ export class TaskModalComponent implements OnInit {  // 🔶 Implémenter OnInit
         error: (err) => {
           console.error('Erreur lors de l\'ajout du commentaire', err);
           this.toastr.error('Erreur lors de l\'ajout du commentaire', 'Erreur');
-          // Optionnel : retirer le commentaire ajouté localement en cas d'erreur
         }
       });
 
-      // Réinitialiser le champ commentaire
       this.newComment = '';
     }
   }
