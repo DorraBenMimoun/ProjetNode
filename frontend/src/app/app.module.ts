@@ -23,6 +23,9 @@ import { TaskBoardComponent } from './components/task-board/task-board.component
 import { ToastrModule } from 'ngx-toastr';
 import { TestSocketComponent } from './test-socket/test-socket.component';
 import { TaskModalComponent } from './components/task-modal/task-modal.component';
+import { TaskEditModalComponent } from './components/task-edit-modal/task-edit-modal.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './components/forgot-password-component/forgot-password-component.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +42,9 @@ import { TaskModalComponent } from './components/task-modal/task-modal.component
     TaskBoardComponent,
     TestSocketComponent,
     TaskModalComponent,
+    TaskEditModalComponent,
+    ResetPasswordComponent,
+    ForgotPasswordComponent,
     
     
   ],

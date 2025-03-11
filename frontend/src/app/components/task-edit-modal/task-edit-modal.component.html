@@ -1,0 +1,53 @@
+<div
+  class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4"
+  *ngIf="isOpen"
+>
+  <div
+    class="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-xl relative border border-gray-200"
+  >
+    <!-- Bouton de fermeture -->
+    <button
+      (click)="onClose()"
+      class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition"
+      aria-label="Fermer"
+    >
+      ✖
+    </button>
+
+    <!-- Titre -->
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Modifier la tâche</h2>
+
+    <!-- Formulaire -->
+    <form (ngSubmit)="onSubmit()" #editForm="ngForm">
+      <div class="mb-4">
+        <label class="block mb-1 font-medium">Titre</label>
+        <input
+          [(ngModel)]="task.title"
+          name="title"
+          required
+          class="w-full p-3 border rounded-lg"
+          placeholder="Titre de la tâche"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-1 font-medium">Description</label>
+        <textarea
+          [(ngModel)]="task.description"
+          name="description"
+          rows="4"
+          class="w-full p-3 border rounded-lg"
+          placeholder="Description de la tâche"
+        ></textarea>
+      </div>
+
+      <!-- Bouton -->
+      <button
+        type="submit"
+        class="w-full bg-[#700c46] text-white p-3 rounded-lg hover:scale-105 transition"
+      >
+        💾 Save
+      </button>
+    </form>
+  </div>
+</div>

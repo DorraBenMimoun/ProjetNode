@@ -1,36 +1,104 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Slide Navbar</title>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
-</head>
-<body>
-	<div class="main">  
-		<input type="checkbox" id="chk" aria-hidden="true" [(ngModel)]="isSignup">
-	  
-		<div class="signup">
-		  <form (ngSubmit)="onSignup()" #signupForm="ngForm">
-			<label for="chk" aria-hidden="true">Sign up</label>
-			<input type="text" name="username" placeholder="User name" required [(ngModel)]="signupData.username">
-			<input type="email" name="email" placeholder="Email" required [(ngModel)]="signupData.email">
-			<input type="password" name="password" placeholder="Password" required [(ngModel)]="signupData.password">
-			<button type="submit">Sign up</button>
-			<p *ngIf="signUpErrorMessage" class="error" style="color: red; text-align: center;">{{ signUpErrorMessage }}</p>
-			<p *ngIf="signUpSuccessMessage" class="success" style="color: red; text-align: center;">{{ signUpSuccessMessage }}</p>
-		  </form>
-		</div>
-	  
-		<div class="login">
-		  <form (ngSubmit)="onLogin()" #loginForm="ngForm">
-			<label for="chk" aria-hidden="true">Login</label>
-			<input type="email" name="email" placeholder="Email" required [(ngModel)]="loginData.email">
-			<input type="password" name="password" placeholder="Password" required [(ngModel)]="loginData.password">
-			<button type="submit">Login</button>
-			<p *ngIf="loginErrorMessage" class="error" style="color: red; text-align: center;">{{ loginErrorMessage }}</p>
-			<p *ngIf="loginSuccessMessage" class="success" style="color: red; text-align: center;">{{ loginSuccessMessage }}</p>
-		  </form>
-		</div>
-	  
-	  </div>
-</body>
+  <head>
+    <title>Slide Navbar</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="main">
+      <input
+        type="checkbox"
+        id="chk"
+        aria-hidden="true"
+        [(ngModel)]="isSignup"
+      />
+
+      <div class="signup">
+        <form (ngSubmit)="onSignup()" #signupForm="ngForm">
+          <label for="chk" aria-hidden="true">Sign up</label>
+          <input
+            type="text"
+            name="username"
+            placeholder="User name"
+            required
+            [(ngModel)]="signupData.username"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+            [(ngModel)]="signupData.email"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+            [(ngModel)]="signupData.password"
+          />
+          <button type="submit">Sign up</button>
+          <p
+            *ngIf="signUpErrorMessage"
+            class="error"
+            style="color: red; text-align: center"
+          >
+            {{ signUpErrorMessage }}
+          </p>
+          <p
+            *ngIf="signUpSuccessMessage"
+            class="success"
+            style="color: red; text-align: center"
+          >
+            {{ signUpSuccessMessage }}
+          </p>
+        </form>
+      </div>
+
+      <div class="login">
+        <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+          <label for="chk" aria-hidden="true">Login</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+            [(ngModel)]="loginData.email"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+            [(ngModel)]="loginData.password"
+          />
+          <button type="submit">Login</button>
+          <p
+            *ngIf="loginErrorMessage"
+            class="error"
+            style="color: red; text-align: center"
+          >
+            {{ loginErrorMessage }}
+          </p>
+          <p style="text-align: center">
+            <a
+              routerLink="/forgotPassword"
+              style="color: #573b8a; text-decoration: none"
+              >Forgot Password?</a
+            >
+          </p>
+          <p
+            *ngIf="loginSuccessMessage"
+            class="success"
+            style="color: red; text-align: center"
+          >
+            {{ loginSuccessMessage }}
+          </p>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>

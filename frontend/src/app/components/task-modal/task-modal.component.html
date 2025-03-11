@@ -14,7 +14,16 @@
     </button>
 
     <!-- En-tête -->
-    <h2 class="text-3xl font-bold text-gray-800 mb-4">{{ task.title }}</h2>
+    <div class="flex flex-row justify-between">
+      <h2 class="text-3xl font-bold text-gray-800 mb-4">{{ task.title }}</h2>
+
+      <button
+        (click)="openEditModal()"
+        class="text-white py-2 px-4 rounded-lg shadow-md transition mb-4"
+      >
+        ✏️
+      </button>
+    </div>
     <p class="text-gray-600 mb-6 leading-relaxed">{{ task.description }}</p>
 
     <!-- Infos -->
@@ -126,9 +135,16 @@
     <!-- Bouton Ajouter -->
     <button
       (click)="addComment()"
-      class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg w-full font-semibold shadow-md transition"
+      class="bg-[#700c46] hover:scale-105 text-white py-3 px-6 rounded-lg w-full font-semibold shadow-md transition"
     >
-      ➕ Ajouter un commentaire
+      ➕ Post your comment
     </button>
   </div>
 </div>
+
+<app-task-edit-modal
+  [task]="task"
+  [isOpen]="showEditModal"
+  (close)="closeEditModal()"
+  (updated)="loadTask()"
+></app-task-edit-modal>

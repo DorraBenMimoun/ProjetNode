@@ -3,7 +3,10 @@
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(to right, #d9a7c7, #fffcdc);
-        margin: 0;
+    background-attachment: scroll;
+    max-height: 100vh;
+    overflow: scroll;
+    margin: 0;
     padding: 20px;
     display: flex;
     flex-direction: column;

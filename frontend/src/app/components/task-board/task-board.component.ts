@@ -84,7 +84,7 @@ export class TaskBoardComponent implements OnChanges {
     const taskToSend = { ...this.newTask, projectId: this.projectId };
     this.taskService.createTask(taskToSend).subscribe({
       next: (data) => {
-        this.tasks.push(data.task);
+        // this.tasks.push(data.task);
         this.showAddTaskForm = false;
         this.newTask.title = '';
         this.newTask.description = '';

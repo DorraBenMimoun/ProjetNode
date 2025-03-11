@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { Task } from '../../models/task.model';
 import { CommentService } from '../../services/comment.service';
 import { ToastrService } from 'ngx-toastr';
 import { orderBy } from 'lodash';
@@ -13,9 +12,24 @@ export class TaskModalComponent implements OnInit {
   @Input() task!: any;
   @Output() close = new EventEmitter<void>();
 
+  openEditModal() {
+    this.showEditModal = true;
+  }
+  
+  closeEditModal() {
+    this.showEditModal = false;
+  }
+
+  loadTask(){
+    
+  }
+  
 
   newComment: string = '';
   comments: any[] = [];  
+  showEditModal: boolean = false;
+
+
 
   constructor(private commentService: CommentService,
         private toastr: ToastrService
@@ -83,4 +97,6 @@ export class TaskModalComponent implements OnInit {
       }
     });
   }
+
+ 
 }

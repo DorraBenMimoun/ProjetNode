@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 const Project = require("../models/projectModel");
 const Task = require("../models/taskModel");
 
@@ -18,7 +18,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
 const generateToken = (user) => {
   return jwt.sign(
     { id: user._id, email: user.email },
@@ -29,7 +28,6 @@ const generateToken = (user) => {
 
 exports.registerUser = async (req, res) => {
   try {
-    
     const { email, password, username } = req.body;
 
     if (!email || !password || !username) {
@@ -42,28 +40,29 @@ exports.registerUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
 
     const newUser = new User({
       email,
       password: hashedPassword,
       username,
-      verificationToken, 
-
+      verificationToken,
     });
 
     await newUser.save();
 
-      // Envoyer l'email de vérification
-      const verificationLink = `http://localhost:9901/users/verify/${verificationToken}`;
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: "Email Verification",
-        text: `Click the following link to verify your account: ${verificationLink}`,
-      };
-  
-      await transporter.sendMail(mailOptions);
+    // Envoyer l'email de vérification
+    const verificationLink = `http://localhost:9901/users/verify/${verificationToken}`;
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Email Verification",
+      text: `Click the following link to verify your account: ${verificationLink}`,
+    };
+
+    await transporter.sendMail(mailOptions);
 
     const token = generateToken(newUser);
 
@@ -82,7 +81,6 @@ exports.registerUser = async (req, res) => {
 };
 exports.verifyUser = async (req, res) => {
   try {
- 
     const { token } = req.params;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -97,9 +95,10 @@ exports.verifyUser = async (req, res) => {
     await user.save();
 
     res.json({ message: "Account verified successfully. You can now log in." });
-
   } catch (error) {
-    res.status(500).json({ message: "Invalid or expired token", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Invalid or expired token", error: error.message });
   }
 };
 exports.loginUser = async (req, res) => {
@@ -111,7 +110,7 @@ exports.loginUser = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-    if (user===null) {
+    if (user === null) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
@@ -138,53 +137,58 @@ exports.loginUser = async (req, res) => {
 
 exports.forgotPassword = async (req, res) => {
   try {
-      const { email } = req.body;
-      const user = await User.findOne({ email });
+    const { email } = req.body;
+    const user = await User.findOne({ email });
 
-      if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    if (!user)
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
 
-      // Générer un token sécurisé
-      const resetToken = uuidv4();
-      user.resetToken = resetToken;
-      user.resetTokenExpiration = Date.now() + 3600000; // 1h de validité
-      await user.save();
+    // Générer un token sécurisé
+    const resetToken = uuidv4();
+    user.resetToken = resetToken;
+    user.resetTokenExpiration = Date.now() + 3600000; // 1h de validité
+    await user.save();
 
-      // Envoyer l'email avec le lien de réinitialisation
-      const resetLink = `http://localhost:9091/reset-password/${resetToken}`;
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: user.email,
-        subject: "Réinitialisation du mot de passe",
-        text: `Cliquez ici pour réinitialiser votre mot de passe: ${resetLink}`,
-      };
-  
-      await transporter.sendMail(mailOptions);
+    // Envoyer l'email avec le lien de réinitialisation
+    const resetLink = `http://localhost:4200/reset-password?token=${resetToken}`;
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Réinitialisation du mot de passe",
+      text: `Cliquez ici pour réinitialiser votre mot de passe: ${resetLink}`,
+    };
 
-      res.json({ message: 'Email envoyé' });
+    await transporter.sendMail(mailOptions);
+
+    res.json({ message: "Email envoyé" });
   } catch (error) {
-      res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: "Erreur serveur" });
   }
 };
 
 exports.resetPassword = async (req, res) => {
   try {
-      const { token } = req.params;
-      const { newPassword } = req.body;
+    const { token } = req.params;
+    const { newPassword } = req.body;
 
-      const user = await User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiration: { $gt: Date.now() },
+    });
 
-      if (!user) return res.status(400).json({ message: 'Token invalide ou expiré' });
+    if (!user)
+      return res.status(400).json({ message: "Token invalide ou expiré" });
 
-      // Hasher le nouveau mot de passe
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-      user.password = hashedPassword;
-      user.resetToken = null;
-      user.resetTokenExpiration = null;
+    // Hasher le nouveau mot de passe
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.resetToken = null;
+    user.resetTokenExpiration = null;
 
-      await user.save();
-      res.json({ message: 'Mot de passe réinitialisé avec succès' });
+    await user.save();
+    res.json({ message: "Mot de passe réinitialisé avec succès" });
   } catch (error) {
-      res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: "Erreur serveur" });
   }
 };
 
@@ -201,7 +205,7 @@ exports.getAllUsers = async (req, res) => {
 // Get user profile (Protected)
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id,"-password");
+    const user = await User.findById(req.user._id, "-password");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -214,7 +218,6 @@ exports.getProfile = async (req, res) => {
 // Update user profile (Protected)
 exports.updateProfile = async (req, res) => {
   try {
-
     const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -222,20 +225,26 @@ exports.updateProfile = async (req, res) => {
     if (req.body.email && req.body.email !== user.email) {
       const emailExists = await User.findOne({ email: req.body.email });
       if (emailExists) {
-      return res.status(400).json({ message: "This email is already in use" });
+        return res
+          .status(400)
+          .json({ message: "This email is already in use" });
       }
 
       user.email = req.body.email;
       user.isVerified = false;
-      const verificationToken = jwt.sign({ email: req.body.email }, process.env.JWT_SECRET, { expiresIn: "1d" });
+      const verificationToken = jwt.sign(
+        { email: req.body.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" }
+      );
       user.verificationToken = verificationToken;
 
       const verificationLink = `http://localhost:9901/users/verify/${verificationToken}`;
       const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: req.body.email,
-      subject: "Email Verification",
-      text: `Click the following link to verify your account: ${verificationLink}`,
+        from: process.env.EMAIL_USER,
+        to: req.body.email,
+        subject: "Email Verification",
+        text: `Click the following link to verify your account: ${verificationLink}`,
       };
 
       await transporter.sendMail(mailOptions);
@@ -285,7 +294,6 @@ exports.updatePassword = async (req, res) => {
   }
 };
 
-
 // Delete user account (Protected)
 exports.deleteAccount = async (req, res) => {
   try {
@@ -300,15 +308,14 @@ exports.deleteAccount = async (req, res) => {
       await project.save();
     }
 
- 
     // Remove tasks associated with the user's projects
     const userProjects = await Project.find({ owner: user._id });
     for (const project of userProjects) {
       await Task.deleteMany({ projectId: project._id });
     }
 
-       // Remove projects where the user is the owner
-       await Project.deleteMany({ owner: user._id });
+    // Remove projects where the user is the owner
+    await Project.deleteMany({ owner: user._id });
 
     await user.deleteOne();
 

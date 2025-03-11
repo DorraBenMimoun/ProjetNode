@@ -4,7 +4,6 @@ require("dotenv").config();
 
 const http = require("http");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 const swaggerUi = require("swagger-ui-express");
