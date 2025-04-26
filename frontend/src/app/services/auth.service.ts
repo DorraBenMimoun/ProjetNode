@@ -7,7 +7,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class AuthService {
   private apiUrl = 'http://localhost:9091/users';
- // Un BehaviorSubject pour suivre l'état de la connexion
   isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
   constructor(private http: HttpClient) {}
 
